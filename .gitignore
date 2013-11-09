@@ -12,7 +12,7 @@ Thumbs.db
 .idea/*
 .idea/
 *.iml
-assignment1.iml
+assignment*.iml
 out/
 out
 out/*

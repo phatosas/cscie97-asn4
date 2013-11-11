@@ -1,0 +1,64 @@
+
+
+classes & interfaces
+--------------------------------
+
+* CollectionServiceAPI
+
+* ICollectionServiceAPI
+    - addCollection(String guid, ICollection collection)
+    - addContentToCollection(String guid, List<Content> contentToAddToCollection)
+    - searchCollections(String searchText)
+    - ??? iterate over specific collection OR iterate over all collections
+    
+* CollectionIterator
+
+* ICollectable
+
+* ICollection
+    - identifier, unique identifier for the collection of type String    - name, name of the collection    - description, description of the collection    - list of child collections (as a list of child collection identifiers)
+
+* Collection
+    concrete implementation of ICollection
+
+* ContentSearch
+
+* StaticCollection, implements ICollection
+    - contains a list of ProductIDs as references to existing products from the ProductAPI
+
+* DynamicCollection, implements ICollection
+    - contains a ContentSearch item that will execute a search query when items are requested and return the found items from the ProductAPI
+
+
+----------------------------------------------------------------
+
+DESIGN PATTERN APPLICATIONS
+
+
+* use Factory pattern to create static and dynamic collections (http://en.wikipedia.org/wiki/Factory_pattern)
+
+* Collections and their contained Products are an example of the Composite design pattern (http://en.wikipedia.org/wiki/Composite_pattern)
+
+* use the Iterator pattern for looping over Collections and printing out all their Product items (http://en.wikipedia.org/wiki/Iterator_pattern)
+    http://docs.oracle.com/javase/7/docs/api/java/util/Iterator.html
+    http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html
+
+
+----------------------------------------------------------------
+
+OPEN QUESTIONS / OBSERVATIONS
+
+what do Product items and Collection items have in common??  
+    - both can print themselves (toString())
+    - each have a NAME attribute
+    - each have an ID attribute
+    - each have a DESCRIPTION attribute
+    
+    
+    
+    
+    
+Collection PropertiesAll collections have the following properties:● identifier, unique identifier for the collection of type String● name, name of the collection● description, description of the collection● list of child collections, list of child collection identifiersStatic collections have:● list of product idsDynamic Collections have:● product search Criteria, similar to Product API search parameters    
+    
+
+

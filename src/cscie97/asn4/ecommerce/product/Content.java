@@ -98,6 +98,7 @@ public abstract class Content {
      */
     private ContentType contentType;
 
+
     /**
      * Returns the unique content ID of the item.
      *

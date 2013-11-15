@@ -108,12 +108,14 @@ public abstract class Item {
      * @param name                the authentication item name
      * @param description         authentication item description
      */
+    /*
     public Item(String id, String name, String description)
     {
         this.id = id;
         this.name = name;
         this.description = description;
     }
+    */
 
     /**
      * Public static method that checks that all required fields are set, and that all authentication item values are

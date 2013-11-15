@@ -1,5 +1,7 @@
 package cscie97.asn4.test;
 
+import cscie97.asn4.ecommerce.authentication.AuthenticationServiceAPI;
+import cscie97.asn4.ecommerce.authentication.IAuthenticationServiceAPI;
 import cscie97.asn4.ecommerce.csv.CollectionImporter;
 import cscie97.asn4.ecommerce.csv.ContentImporter;
 import cscie97.asn4.ecommerce.exception.CollectionNotFoundException;
@@ -60,7 +62,7 @@ public class TestDriver {
      *              search criteria, and collection searches
      */
     public static void main(String[] args) {
-        if (args.length == 5) {
+        if (args.length == 6) {
             try {
                 // later versions will require proper authentication and authorization to use restricted interface
                 // methods on the ProductAPI, but for now we will mock this using a fake GUID
@@ -75,6 +77,12 @@ public class TestDriver {
                 SearchEngine.executeQueryFilename(args[3]);
 
                 CollectionImporter.importCollectionsFile(myGUID, args[4]);
+
+
+                IAuthenticationServiceAPI authenticationAPI = AuthenticationServiceAPI.getInstance();
+
+
+
             }
             // if we catch a ParseException, either the original import of Countries, Devices, Content or the
             // execution of the Search Query caused the problem; in either case, the entire program execution should
@@ -106,9 +114,10 @@ public class TestDriver {
             System.out.println("Arguments to TestDriver should be: " +
                                     "1) import Countries CSV file, " +
                                     "2) import Devices CSV file, " +
-                                    "3) import Products CSV file, and " +
-                                    "4) execute Search Query CSV file" +
-                                    "5) Collections definitions and queries CSV file");
+                                    "3) import Products CSV file, " +
+                                    "4) execute Search Query CSV file, " +
+                                    "5) Collections definitions and queries CSV file and " +
+                                    "6) Authentication definitions and import CSV file");
             System.exit(1);
         }
     }

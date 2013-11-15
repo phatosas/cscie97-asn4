@@ -225,7 +225,11 @@ public class AuthenticationImporter extends Importer {
     }
 
     /**
-     * Public method for importing {@link cscie97.asn4.ecommerce.collection.Collection} items into the product catalog.
+     * Public method for importing {@link cscie97.asn4.ecommerce.collection.Collection} items into the authentication
+     *
+     *
+     * catalog.
+     *
      * Note that any {@link cscie97.asn4.ecommerce.product.Content} items referenced in the import file must
      * already exist in the Product catalog first, or the import of that Collection items will not work.
      * Throws ImportException on error accessing or processing the input Collections File.
@@ -235,7 +239,12 @@ public class AuthenticationImporter extends Importer {
      * @throws cscie97.asn4.ecommerce.exception.ImportException        thrown when encountering non-parse related exceptions in the import process
      * @throws ParseException         thrown when encountering any issues parsing the input file related to the format of the file contents
      */
-    public static void importCollectionsFile(String guid, String filename) throws ImportException, ParseException, CollectionNotFoundException {
+    public static void importAuthenticationFile(String guid, String filename) throws ImportException, ParseException, CollectionNotFoundException {
+
+
+
+
+
         int lineNumber = 0;  // keep track of what lineNumber we're reading in from the input file for exception handling
         String line;  // store the text on each line as it's processed
 

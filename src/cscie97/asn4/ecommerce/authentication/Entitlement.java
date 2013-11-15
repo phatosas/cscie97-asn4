@@ -18,7 +18,11 @@ public abstract class Entitlement extends Item {
      */
     public Entitlement(String id, String name, String description)
     {
-        super(id,name,description);
+        //super(id,name,description);
+        this.setID(id);
+        this.setName(name);
+        this.setDescription(description);
+
     }
 
 

@@ -3,8 +3,7 @@ package cscie97.asn4.ecommerce.authentication;
 import cscie97.asn4.ecommerce.collection.Collection;
 import cscie97.asn4.ecommerce.collection.ICollectionServiceAPI;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,6 +13,15 @@ import java.util.Set;
  * To change this template use File | Settings | File Templates.
  */
 public class AuthenticationServiceAPI implements IAuthenticationServiceAPI {
+
+
+    private static final String SUPER_ADMINISTRATOR_USERNAME = "dkilleffer";
+
+    private static final String SUPER_ADMINISTRATOR_PASSWORD = "secret";
+
+    private User superUser;
+
+
 
     /**
      * The unique top-level Entitlements contained in the Authentication catalog; each Entitlement may only be
@@ -44,6 +52,39 @@ public class AuthenticationServiceAPI implements IAuthenticationServiceAPI {
      */
     private AuthenticationServiceAPI() {
         this.entitlements = new HashSet<Entitlement>() { };
+
+        //private final String SUPER_ADMINISTRATOR_USERNAME = "dkilleffer";
+        //private final String SUPER_ADMINISTRATOR_PASSWORD = "secret";
+        //private User administrativeSuperUser;
+
+        String superUserGUID = UUID.randomUUID().toString();
+
+        Credentials credential = new Credentials(SUPER_ADMINISTRATOR_USERNAME, SUPER_ADMINISTRATOR_PASSWORD);
+
+        this.superUser = new User(superUserGUID, SUPER_ADMINISTRATOR_USERNAME, "Administrative Super User");
+
+        superUser.addCredential(credential);
+
+        // http://stackoverflow.com/questions/3581258/adding-n-hours-to-a-date-in-java
+        Calendar cal = Calendar.getInstance(); // creates calendar
+        cal.setTime(new Date()); // sets calendar time/date
+        cal.add(Calendar.HOUR_OF_DAY, 1); // adds one hour
+        //cal.getTime(); // returns new date object, one hour in the future
+
+        AccessToken token = new AccessToken();
+        token.setId( UUID.randomUUID().toString() );
+        token.setExpirationTime( cal.getTime() );  // expire in 1 hour
+        token.setLastUpdated( new Date() );
+        token.setUserID( superUser.getID() );
+
+        superUser.addAccessToken(token);
+
+
+        //boolean isPasswordValid = superUser.validatePassword(SUPER_ADMINISTRATOR_PASSWORD);
+        boolean badPasswordCheck = superUser.validatePassword("fake");
+        boolean goodPasswordCheck = superUser.validatePassword("secret");
+        boolean bestPasswordCheck = superUser.validatePassword(SUPER_ADMINISTRATOR_PASSWORD);
+
     }
 
     /**
@@ -63,7 +104,8 @@ public class AuthenticationServiceAPI implements IAuthenticationServiceAPI {
 
 
 
-
+    //public UUID thingOne = new UUID();
+    public UUID thingTwo = UUID.randomUUID();
 
 
 

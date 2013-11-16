@@ -14,6 +14,8 @@ package cscie97.asn4.ecommerce.exception;
  */
 public class AccessDeniedException extends MobileAppException {
 
+    public String username;
+
     /**
      * Wraps a more generic exception that may have been thrown in either the
      * {@link cscie97.asn4.ecommerce.csv.CollectionImporter}, {@link cscie97.asn4.ecommerce.csv.ContentImporter}, or
@@ -25,8 +27,9 @@ public class AccessDeniedException extends MobileAppException {
      * @param filename  the filename that was the cause of the original exception
      * @param cause     the wrapped lower-level exception that triggered this exception's creation
      */
-    public AccessDeniedException (String line, int lineNum, String filename, Throwable cause) {
-        super( "AccessDeniedException", line, lineNum, filename, cause);
+    public AccessDeniedException (String username, String line, int lineNum, String filename, Throwable cause) {
+        super( "AccessDeniedException: invalid username and/or password for user: ["+username+"]", line, lineNum, filename, cause);
+        this.username = username;
     }
 
 }

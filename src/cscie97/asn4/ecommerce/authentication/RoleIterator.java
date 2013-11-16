@@ -1,11 +1,15 @@
-package cscie97.asn4.ecommerce.collection;
+package cscie97.asn4.ecommerce.authentication;
 
+import cscie97.asn4.ecommerce.authentication.Entitlement;
+import cscie97.asn4.ecommerce.authentication.Role;
+import cscie97.asn4.ecommerce.authentication.Permission;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Stack;
 
+
 /**
- * Allows for the iteration of {@link cscie97.asn4.ecommerce.collection.Collectible} items.
+ * Allows for the iteration of {@link cscie97.asn4.ecommerce.authentication.Role} items.
  * {@link cscie97.asn4.ecommerce.collection.Collectible}s follow a two-part Composite design pattern; at the
  * lowest level, Collectibles can be instances of either {@link cscie97.asn4.ecommerce.collection.StaticCollection} or
  * {@link cscie97.asn4.ecommerce.collection.DynamicCollection}, both of which inherit from
@@ -28,17 +32,17 @@ import java.util.Stack;
  * @see cscie97.asn4.ecommerce.collection.DynamicCollection
  * @see cscie97.asn4.ecommerce.collection.StaticCollection
  */
-public class CollectionIterator implements Iterator {
+public class RoleIterator implements Iterator {
 
     /**
      * Private stack is used to "flatten" the tree structure of the Collection and return items in depth-first order.
      */
-    private Stack<Collectible> itemStack = new Stack<Collectible>();
+    private Stack<Entitlement> itemStack = new Stack<Entitlement>();
 
     /**
      * Keeps a reference to the current item that the hidden internal iterator "pointer" is positioned over.
      */
-    private Collectible current = null;
+    private Entitlement current = null;
 
     /**
      * Class constructor.  Takes a reference to the "top" level of the
@@ -46,7 +50,7 @@ public class CollectionIterator implements Iterator {
      *
      * @param top  the Collectible to iterate over
      */
-    public CollectionIterator(Collectible top) {
+    public RoleIterator(Role top) {
         this.itemStack.push(top);
         buildItemStack(top);
     }
@@ -59,7 +63,7 @@ public class CollectionIterator implements Iterator {
      * @return  the current item the iterator is positioned at; will return null if {@link CollectionIterator#next()}
      *          has never been called
      */
-    public Collectible getCurrent() {
+    public Entitlement getCurrent() {
         return current;
     }
 
@@ -68,20 +72,24 @@ public class CollectionIterator implements Iterator {
      *
      * @return  the next Collectible in the Collection
      */
-    public Collectible next() {
+    public Entitlement next() {
         if (!hasNext()) {
-            throw new NoSuchElementException("no more items!");
+            throw new NoSuchElementException("no more entitlements!");
         }
         current = itemStack.pop();
         return current;
     }
 
-    private void buildItemStack(Collectible item) {
-        for (Collectible curChild : item.getChildren()) {
-            itemStack.push(curChild);
-            if (curChild instanceof StaticCollection || curChild instanceof DynamicCollection) {
-                buildItemStack(curChild);
+    private void buildItemStack(Entitlement item) {
+        if (item instanceof Role) {
+            for (Entitlement curChild : ((Role)item).getChildren()) {
+                itemStack.push(curChild);
+                if (curChild instanceof Role) {
+                    buildItemStack((Role)curChild);
+                }
             }
+        } else {
+            itemStack.push(item);
         }
     }
 

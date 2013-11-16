@@ -1,18 +1,13 @@
 package cscie97.asn4.test;
 
+import cscie97.asn4.ecommerce.authentication.AccessToken;
 import cscie97.asn4.ecommerce.authentication.AuthenticationServiceAPI;
 import cscie97.asn4.ecommerce.authentication.IAuthenticationServiceAPI;
-import cscie97.asn4.ecommerce.csv.CollectionImporter;
-import cscie97.asn4.ecommerce.csv.ContentImporter;
-import cscie97.asn4.ecommerce.exception.CollectionNotFoundException;
-import cscie97.asn4.ecommerce.exception.ImportException;
-import cscie97.asn4.ecommerce.exception.QueryEngineException;
-import cscie97.asn4.ecommerce.exception.ParseException;
-import cscie97.asn4.ecommerce.csv.Importer;
+import cscie97.asn4.ecommerce.csv.*;
+import cscie97.asn4.ecommerce.exception.*;
 import cscie97.asn4.ecommerce.product.IProductAPI;
 import cscie97.asn4.ecommerce.product.Content;
 import cscie97.asn4.ecommerce.product.ContentSearch;
-import cscie97.asn4.ecommerce.csv.SearchEngine;
 
 /**
  * Test harness for the CSCI-E 97 Assignment 2.  Reads in several supplied input files to load
@@ -68,6 +63,8 @@ public class TestDriver {
                 // methods on the ProductAPI, but for now we will mock this using a fake GUID
                 String myGUID = "hope this works!";
 
+
+                /*
                 ContentImporter.importCountryFile(myGUID, args[0]);
 
                 ContentImporter.importDeviceFile(myGUID, args[1]);
@@ -77,12 +74,34 @@ public class TestDriver {
                 SearchEngine.executeQueryFilename(args[3]);
 
                 CollectionImporter.importCollectionsFile(myGUID, args[4]);
+                */
 
 
                 IAuthenticationServiceAPI authenticationAPI = AuthenticationServiceAPI.getInstance();
 
+                // login as the "super user" to process the Authentication CSV file
+                AccessToken superToken = authenticationAPI.login("dkilleffer", "secret");
+
+                AuthenticationImporter.importAuthenticationFile(superToken.getId(), args[0]);
 
 
+                ContentImporter.importCountryFile(myGUID, args[1]);
+
+                ContentImporter.importDeviceFile(myGUID, args[2]);
+
+                ContentImporter.importContentFile(myGUID, args[3]);
+
+                SearchEngine.executeQueryFilename(args[4]);
+
+                CollectionImporter.importCollectionsFile(myGUID, args[5]);
+
+            }
+            // if we catch an AccessDeniedException, the login information for the super user was incorrect OR the
+            // super user was not actually loaded.  Verify that the username/password combo passed in this TestDriver
+            // matches up to the correct super user defined at the AuthenticationServiceAPI initialization.
+            catch (AccessDeniedException ade) {
+                System.out.println(ade.getMessage());
+                System.exit(1);
             }
             // if we catch a ParseException, either the original import of Countries, Devices, Content or the
             // execution of the Search Query caused the problem; in either case, the entire program execution should
@@ -112,12 +131,12 @@ public class TestDriver {
         }
         else {
             System.out.println("Arguments to TestDriver should be: " +
-                                    "1) import Countries CSV file, " +
-                                    "2) import Devices CSV file, " +
-                                    "3) import Products CSV file, " +
-                                    "4) execute Search Query CSV file, " +
-                                    "5) Collections definitions and queries CSV file and " +
-                                    "6) Authentication definitions and import CSV file");
+                                    "1) import Authentication CSV file, " +
+                                    "2) import Countries CSV file, " +
+                                    "3) import Devices CSV file, " +
+                                    "4) import Products CSV file, " +
+                                    "5) execute Search Query CSV file, and " +
+                                    "6) import Collections definitions and Queries CSV file");
             System.exit(1);
         }
     }

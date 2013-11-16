@@ -1,5 +1,6 @@
 package cscie97.asn4.ecommerce.authentication;
 
+
 /**
  * Created with IntelliJ IDEA.
  * User: dkilleffer
@@ -25,6 +26,9 @@ public abstract class Entitlement extends Item {
 
     }
 
+    public Entitlement() {
+
+    }
 
     public String acceptVisitor(AuthenticationVisitor visitor) {
         return String.format("ID: %s, NAME: %s, DESCRIPTION: %s", this.getID(), this.getName(), this.getDescription());

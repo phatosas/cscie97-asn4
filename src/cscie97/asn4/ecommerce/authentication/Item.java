@@ -61,7 +61,7 @@ public abstract class Item {
      *
      * @param id  the unique ID to use for the authentication item
      */
-    protected void setID(String id) {
+    public void setID(String id) {
         this.id = id;
     }
 
@@ -79,7 +79,7 @@ public abstract class Item {
      *
      * @param name  the name to use for the authentication item
      */
-    protected void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -97,7 +97,7 @@ public abstract class Item {
      *
      * @param description  the new authentication item description to use
      */
-    protected void setDescription(String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
@@ -135,7 +135,7 @@ public abstract class Item {
     /**
      * Returns a string representation of the authentication item; useful for debugging.
      *
-     * @return  string representation of the authenticaion item
+     * @return  string representation of the authentication item
      */
     @Override
     public String toString() {

@@ -17,26 +17,42 @@ public class User extends Item {
 
     private Set<Entitlement> entitlements = new HashSet<Entitlement>();
 
-    private Set<AccessToken> accessTokens = new HashSet<AccessToken>();
+    //private Set<AccessToken> accessTokens = new HashSet<AccessToken>();
+    private AccessToken token;
 
 
     /**
      * Class constructor.
      *
-     * @param id                  the unique authentication item ID
-     * @param name                the authentication item name
-     * @param description         authentication item description
+     * @param id           the unique user ID
+     * @param name         the authentication item name
+     * @param description  authentication item description
      */
-    public User(String id, String name, String description)
-    {
-        //super(id,name,description);
+    public User(String id, String name, String description) {
         this.setID(id);
         this.setName(name);
         this.setDescription(description);
     }
 
-    public User() { }
+    /**
+     * Class constructor.  Since no ID or description are specified, will generate a new GUID for the ID, and
+     * also use the name as part of the description.
+     *
+     * @param name  the user name
+     */
+    public User(String name) {
+        this(UUID.randomUUID().toString(), name, String.format("User account for %s", name) );
+    }
 
+    /**
+     * Class constructor.  Since no description is specified, will generate a default description based on the name
+     *
+     * @param id    the user ID
+     * @param name  the user name
+     */
+    public User(String id, String name) {
+        this(id, name, String.format("User account for %s", name) );
+    }
 
 
 
@@ -59,6 +75,7 @@ public class User extends Item {
         this.entitlements = entitlements;
     }
 
+    /*
     public Set<AccessToken> getAccessTokens() {
         return accessTokens;
     }
@@ -66,7 +83,15 @@ public class User extends Item {
     public void setAccessTokens(Set<AccessToken> accessTokens) {
         this.accessTokens = accessTokens;
     }
+    */
 
+    public AccessToken getAccessToken() {
+        return token;
+    }
+
+    public void setAccessToken(AccessToken accessToken) {
+        this.token = accessToken;
+    }
 
 
 
@@ -88,9 +113,9 @@ public class User extends Item {
         this.entitlements.add(entitlement);
     }
 
-    public void addAccessToken(AccessToken token) {
-        this.accessTokens.add(token);
-    }
+    //public void addAccessToken(AccessToken token) {
+    //    this.accessTokens.add(token);
+    //}
 
 
     public boolean hasPermission(String permissionID) {
@@ -103,15 +128,6 @@ public class User extends Item {
     public boolean validatePassword(String password) {
         for (Credentials c : credentials) {
             try {
-                //String actualHash = PasswordHash.createHash( c.getPasswordSalt() + password);
-                //String actualHash = PasswordHash.createHash( c.getPasswordSalt() + ":"+ password);
-                //String actualHash = PasswordHash.createHash(password);
-                //String expectedHash = c.getPasswordHash();
-
-                //System.out.println("CHECKING PASSWORD FOR USER ID ["+this.getID()+"] AND USERNAME: ["+c.getUsername()+"] - password: ["+password+"]:\n" +
-                //        "expected hash: ["+expectedHash+"]\n" +
-                //        "actual hash: ["+actualHash+"]\n");
-
                 if (PasswordHash.validatePassword(password, c.getPasswordHash()) )
                     return true;
             }

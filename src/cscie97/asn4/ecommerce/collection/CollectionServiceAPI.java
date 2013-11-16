@@ -166,10 +166,10 @@ public class CollectionServiceAPI implements ICollectionServiceAPI {
      * {@link cscie97.asn4.ecommerce.collection.CollectionIterator} which will be able to iterate over every item in
      * the Collection catalog.
      *
-     * @param collectionId  the unique collection ID to look up the CollectionIterator for; may also be null (in which
+     * @param collectionId  the unique collection ID to look up the RoleIterator for; may also be null (in which
      *                      case a virtual root Collection is defined, and the iterator for that is returned)
-     * @return              the CollectionIterator for the Collection with matching collectionId, or a
-     *                      CollectionIterator for a virtual "root" level Collection which may traverse all
+     * @return              the RoleIterator for the Collection with matching collectionId, or a
+     *                      RoleIterator for a virtual "root" level Collection which may traverse all
      *                      Collectibles in the entire catalog
      */
     @Override

@@ -1,5 +1,8 @@
 package cscie97.asn4.ecommerce.collection;
 
+import cscie97.asn4.ecommerce.authentication.AuthenticationServiceAPI;
+import cscie97.asn4.ecommerce.authentication.IAuthenticationServiceAPI;
+import cscie97.asn4.ecommerce.authentication.PermissionType;
 import cscie97.asn4.ecommerce.product.ContentSearch;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -28,6 +31,11 @@ import java.util.Set;
 public class CollectionServiceAPI implements ICollectionServiceAPI {
 
     /**
+     * Save a reference to the Authentication API for validating access to restricted interface methods
+     */
+    private IAuthenticationServiceAPI authenticationAPI;
+
+    /**
      * The unique top-level collections contained in the Collection catalog; each collection may only be declared at
      * the top-level once, but may be nested arbitrarily deeply in other collections.
      */
@@ -43,6 +51,7 @@ public class CollectionServiceAPI implements ICollectionServiceAPI {
      */
     private CollectionServiceAPI() {
         this.topLevelCollections = new HashSet<Collection>() { };
+        this.authenticationAPI = AuthenticationServiceAPI.getInstance();
     }
 
     /**
@@ -86,13 +95,13 @@ public class CollectionServiceAPI implements ICollectionServiceAPI {
      * Restricted interface; will validate GUID token before adding content to a collection.  Adds the passed
      * collection to the CollectionService catalog at the top-level.
      *
-     * @param guid        the string access token to check for authentication and authorization for carrying out
+     * @param tokenID     the string access token to check for authentication and authorization for carrying out
      *                    restricted actions on the CollectionServiceAPI
      * @param collection  the {@link cscie97.asn4.ecommerce.collection.Collection} to add to the Collection catalog
      */
     @Override
-    public void addCollection(String guid, Collection collection) {
-        if (validateAccessToken(guid)) {
+    public void addCollection(String tokenID, Collection collection) {
+        if (authenticationAPI.mayAccess(tokenID, PermissionType.CREATE_COLLECTION)) {
             // ensure the collection is valid and that it doesn't already exist at the top level
             if (collection != null && Collection.validateCollection(collection) && !this.topLevelCollections.contains(collection)) {
                 this.topLevelCollections.add(collection);
@@ -111,7 +120,7 @@ public class CollectionServiceAPI implements ICollectionServiceAPI {
      * {@link cscie97.asn4.ecommerce.product.IProductAPI}, or {@link cscie97.asn4.ecommerce.collection.Collection}
      * objects.
      *
-     * @param guid          the string access token to check for authentication and authorization for carrying out
+     * @param tokenID       the string access token to check for authentication and authorization for carrying out
      *                      restricted actions on the CollectionServiceAPI
      * @param collectionId  the collection ID of the {@link cscie97.asn4.ecommerce.collection.Collection} to add the
      *                      collectible to
@@ -120,8 +129,8 @@ public class CollectionServiceAPI implements ICollectionServiceAPI {
      *                      {@link cscie97.asn4.ecommerce.collection.Collection} item) to add to the found Collection
      */
     @Override
-    public void addContentToCollection(String guid, String collectionId, Collectible collectible) {
-        if (validateAccessToken(guid)) {
+    public void addContentToCollection(String tokenID, String collectionId, Collectible collectible) {
+        if (authenticationAPI.mayAccess(tokenID, PermissionType.ADD_CONTENT)) {
             Collection foundCollection = this.getCollectionByID(collectionId);
             if (foundCollection != null) {
                 List<String> preexistingIDs = new ArrayList<String>();
@@ -226,7 +235,7 @@ public class CollectionServiceAPI implements ICollectionServiceAPI {
      * defined, it is immediately executed so that the child elements of the
      * {@link cscie97.asn4.ecommerce.collection.DynamicCollection} are present.
      *
-     * @param guid            the string access token to check for authentication and authorization for carrying out
+     * @param tokenID         the string access token to check for authentication and authorization for carrying out
      *                        restricted actions on the CollectionServiceAPI
      * @param collectionId    the collection ID of the {@link cscie97.asn4.ecommerce.collection.DynamicCollection} to
      *                        define the add the search criteria for
@@ -235,30 +244,13 @@ public class CollectionServiceAPI implements ICollectionServiceAPI {
      *                        {@link cscie97.asn4.ecommerce.collection.Collection} item) to add to the found Collection
      */
     @Override
-    public void setDynamicCollectionSearchCriteria(String guid, String collectionId, ContentSearch searchCriteria) {
-        if (validateAccessToken(guid)) {
+    public void setDynamicCollectionSearchCriteria(String tokenID, String collectionId, ContentSearch searchCriteria) {
+        if (authenticationAPI.mayAccess(tokenID, PermissionType.DEFINE_COLLECTION_SEARCH_CRITERIA)) {
             Collection foundCollection = this.getCollectionByID(collectionId);
             if (foundCollection != null && foundCollection instanceof DynamicCollection) {
                 ((DynamicCollection)foundCollection).setSearchCriteria(searchCriteria);
             }
         }
-    }
-
-    /**
-     * Verifies that the <b>guid</b> access token passed is authenticated and authorized for carrying out
-     * restricted actions on the CollectionServiceAPI (such as adding new Collections, adding Content to Collection,
-     * etc.).
-     * <b>Note that for this version of the CollectionServiceAPI, this method is mocked and will return true for
-     * any string passed.</b>
-     *
-     * @param guid  the string access token to check for authentication and authorization for carrying out
-     *              restricted actions on the CollectionServiceAPI
-     * @return      true if guid is authenticated and authorized to execute restricted actions on CollectionServiceAPI,
-     *              false otherwise
-     */
-    @Override
-    public boolean validateAccessToken(String guid) {
-        return guid != null && guid.length() > 0;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

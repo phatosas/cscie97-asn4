@@ -33,17 +33,6 @@ import java.util.Set;
 public interface IProductAPI {
 
     /**
-     * Verifies that the <b>guid</b> access token passed is authenticated and authorized for carrying out
-     * restricted actions on the ProductAPI (such as adding new Content items, etc.).
-     * <b>Note that for this version of the ProductAPI, this method is mocked and will return true for
-     * any string passed.</b>
-     *
-     * @param guid  the string access token to check for authentication and authorization for carrying out restricted actions on the ProductAPI
-     * @return  true if guid is authenticated and authorized to execute restricted actions on ProductAPI, false otherwise
-     */
-    public boolean validateAccessToken(String guid);
-
-    /**
      * Given a 2-character country code, search for any country that matches in the product catalog.
      * @param code  a 2-character country code
      * @return      the found country with the matching code

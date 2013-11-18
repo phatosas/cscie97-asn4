@@ -113,8 +113,6 @@ public class AuthenticationImporter extends Importer {
         System.out.println(String.format("Adding Permission on ServiceID [%s] to AuthenticationService catalog: [%s]\n", serviceID, permission));
     }
 
-
-
     /**
      * Creates roles and adds them to the {@link cscie97.asn4.ecommerce.authentication.AuthenticationServiceAPI}.
      * The format of each element in authenticationData should be:
@@ -210,23 +208,7 @@ public class AuthenticationImporter extends Importer {
         System.out.println(String.format("Adding Entitlement ID [%s] to Role ID [%s]\n", roleID, entitlementID));
     }
 
-    private static void addCredential(String guid, String[] authenticationData) throws ParseException {
-     /*
-     4
-     # add_credential, <user_id>, <login_name>, <password>
-     add_credential authentication_admin, jill, 1234567
-
-
-# add_credential
-# add_credential, <user_id>, <login_name>, <password>
-add_credential, product_admin, sam, secret
-add_credential product_admin, sam2, secret2
-add_credential product_dev, joe, 1234
-add_credential collection_admin, lucy, 4567
-add_credential authentication_admin, jill, 1234567
-
-     */
-
+    private static void addCredentialToUser(String guid, String[] authenticationData) throws ParseException {
         // ensure that we have exactly 4 elements passed and that the first element is "add_credential"
         if (authenticationData == null ||
             authenticationData.length != 4 ||
@@ -243,47 +225,33 @@ add_credential authentication_admin, jill, 1234567
         String username = authenticationData[2].trim();
         String password = authenticationData[3].trim();
 
-
         IAuthenticationServiceAPI authenticationAPI = AuthenticationServiceAPI.getInstance();
+        authenticationAPI.addCredentialToUser(guid, userID, username, password);
 
-        User foundUser = authenticationAPI.getUserByUserID(userID);
-        if (foundUser != null) {
-
-            Credentials c = new Credentials();
-
-
-            System.out.println(String.format("Adding Credentials username [%s] password [%s] to User ID [%s]\n", username, password, userID));
-
-        }
-
-
+        System.out.println(String.format("Adding Credentials username [%s] password [%s] to User ID [%s]\n", username, password, userID));
     }
 
     private static void addEntitlementToUser(String guid, String[] authenticationData) throws ParseException {
-     /*
-     3
-     # add_entitlement_to_user, <userid>, <entitlementid>
-     add_entitlement_to_user, authentication_admin, authentication_admin_role
-     */
+        // ensure that we have exactly 4 elements passed and that the first element is "add_credential"
+        if (authenticationData == null ||
+            authenticationData.length != 3 ||
+            !authenticationData[0].trim().equalsIgnoreCase("add_entitlement_to_user")
+        ) {
+            throw new ParseException("Import Authentication line contains invalid data when calling addEntitlementToUser(): "+ StringUtils.join(authenticationData, ","),
+                    null,
+                    0,
+                    null,
+                    null);
+        }
 
+        String userID = authenticationData[1].trim();
+        String entitlementID  = authenticationData[2].trim();
+
+        IAuthenticationServiceAPI authenticationAPI = AuthenticationServiceAPI.getInstance();
+        authenticationAPI.addEntitlementToUser(guid, userID, entitlementID);
+
+        System.out.println(String.format("Adding Entitlement ID [%s] to User ID [%s]\n", entitlementID, userID));
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     /**
@@ -378,7 +346,7 @@ add_credential authentication_admin, jill, 1234567
                             }
                             // add credential
                             if (cleanedColumns.length == 4 && cleanedColumns[0].equalsIgnoreCase("add_credential")) {
-                                AuthenticationImporter.addCredential(guid, cleanedColumns);
+                                AuthenticationImporter.addCredentialToUser(guid, cleanedColumns);
                             }
                             // add entitlement to user
                             if (cleanedColumns.length == 3 && cleanedColumns[0].equalsIgnoreCase("add_entitlement_to_user")) {
@@ -415,8 +383,6 @@ add_credential authentication_admin, jill, 1234567
 
                 // TODO: lastly, generate and display an inventory of all Authentication items, grouped by type
                 int j = 9;
-
-
             }
             catch (FileNotFoundException fnfe) {
                 throw new ImportException("Could not find file ["+filename+"] to open for reading", lineNumber, filename, fnfe);

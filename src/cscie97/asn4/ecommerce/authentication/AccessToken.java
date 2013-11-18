@@ -1,6 +1,8 @@
 package cscie97.asn4.ecommerce.authentication;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,6 +20,19 @@ public class AccessToken {
     private Date expirationTime;
 
     private Date lastUpdated;
+
+
+    public AccessToken(String userID) {
+        this.id = UUID.randomUUID().toString();
+        this.userID = userID;
+
+        Calendar cal = Calendar.getInstance(); // creates calendar
+        cal.setTime(new Date()); // sets calendar time/date
+        cal.add(Calendar.HOUR_OF_DAY, 1); // adds one hour
+
+        this.expirationTime = cal.getTime();  // expire in 1 hour
+        this.lastUpdated = new Date();
+    }
 
 
 

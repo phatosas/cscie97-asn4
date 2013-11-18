@@ -12,16 +12,11 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public class Permission extends Entitlement {
 
-
     public Permission(String id, String name, String description) {
         super(id, name, description);
     }
 
-    public Permission() {
-
-    }
-
-
+    public Permission() { }
 
     /**
      * Since {@link cscie97.asn4.ecommerce.product.Content} objects may be added to collections, and also since

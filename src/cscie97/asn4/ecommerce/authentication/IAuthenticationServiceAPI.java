@@ -15,8 +15,6 @@ public interface IAuthenticationServiceAPI {
 
     public void addUser(String tokenID, User user);
 
-    //public void addEntitlement(String tokenID, Entitlement entitlement);
-
     public void addRole(String tokenID, Role role);
 
     public void addPermission(String tokenID, Permission permission);
@@ -27,7 +25,9 @@ public interface IAuthenticationServiceAPI {
 
     public void addPermissionToRole(String tokenID, String roleID, String permissionID);
 
-    public void addCredentialToUser(String userID, String username, String password);
+    public void addCredentialToUser(String tokenID, String userID, String username, String password);
+
+    public void addEntitlementToUser(String tokenID, String userID, String entitlementID);
 
     public void createService(String tokenID, String id, String name, String description);
 
@@ -37,24 +37,29 @@ public interface IAuthenticationServiceAPI {
 
     public void createUser(String tokenID, String id, String name);
 
-
-
-
-
     public AccessToken login(String username, String password) throws AccessDeniedException;
 
-    //public void logout(AccessToken token);
     public void logout(String tokenID);
 
-    //public boolean mayAccess(AccessToken token, String permissionID);
     public boolean mayAccess(String tokenID, String permissionID);
+
+    public boolean mayAccess(String tokenID, PermissionType permissionType);
 
     public String getInventory();
 
+    /*
     public User getUserByUserID(String userID);
 
     public User getUserByUsername(String username);
 
     public User getUserByAccessTokenID(String tokenID);
+    */
+/*
+    User getUserByUserID(String userID);
+
+    User getUserByUsername(String username);
+
+    User getUserByAccessTokenID(String tokenID);
+*/
 
 }

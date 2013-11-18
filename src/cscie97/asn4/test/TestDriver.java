@@ -59,41 +59,47 @@ public class TestDriver {
     public static void main(String[] args) {
         if (args.length == 6) {
             try {
-                // later versions will require proper authentication and authorization to use restricted interface
-                // methods on the ProductAPI, but for now we will mock this using a fake GUID
-                String myGUID = "hope this works!";
-
-
-                /*
-                ContentImporter.importCountryFile(myGUID, args[0]);
-
-                ContentImporter.importDeviceFile(myGUID, args[1]);
-
-                ContentImporter.importContentFile(myGUID, args[2]);
-
-                SearchEngine.executeQueryFilename(args[3]);
-
-                CollectionImporter.importCollectionsFile(myGUID, args[4]);
-                */
-
-
                 IAuthenticationServiceAPI authenticationAPI = AuthenticationServiceAPI.getInstance();
+
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                 // login as the "super user" to process the Authentication CSV file
                 AccessToken superToken = authenticationAPI.login("dkilleffer", "secret");
 
                 AuthenticationImporter.importAuthenticationFile(superToken.getId(), args[0]);
 
+                // logout as the "super user" to process the Authentication CSV file
+                authenticationAPI.logout(superToken.getId());
 
-                ContentImporter.importCountryFile(myGUID, args[1]);
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-                ContentImporter.importDeviceFile(myGUID, args[2]);
+                // login as one of the Product Admins to process the Content CSV files
+                AccessToken productAdminToken = authenticationAPI.login("sam", "secret");
 
-                ContentImporter.importContentFile(myGUID, args[3]);
+                //ContentImporter.importCountryFile(myGUID, args[1]);
+                //ContentImporter.importDeviceFile(myGUID, args[2]);
+                //ContentImporter.importContentFile(myGUID, args[3]);
+                ContentImporter.importCountryFile(productAdminToken.getId(), args[1]);
+                ContentImporter.importDeviceFile(productAdminToken.getId(), args[2]);
+                ContentImporter.importContentFile(productAdminToken.getId(), args[3]);
 
                 SearchEngine.executeQueryFilename(args[4]);
 
-                CollectionImporter.importCollectionsFile(myGUID, args[5]);
+                // logout as the product admin user
+                authenticationAPI.logout(productAdminToken.getId());
+
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+                // login as one of the Collection Admins to process the Collection CSV file
+                AccessToken collectionAdminToken = authenticationAPI.login("lucy", "4567");
+
+                CollectionImporter.importCollectionsFile(collectionAdminToken.getId(), args[5]);
+
+                // logout as the collections admin user
+                authenticationAPI.logout(collectionAdminToken.getId());
+
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             }
             // if we catch an AccessDeniedException, the login information for the super user was incorrect OR the

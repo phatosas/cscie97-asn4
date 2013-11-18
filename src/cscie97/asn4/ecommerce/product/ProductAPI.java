@@ -5,6 +5,8 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.ArrayList;
 import org.apache.commons.collections4.CollectionUtils;
+import cscie97.asn4.ecommerce.authentication.*;
+
 
 /**
  * A public API for interacting with the Mobile Application Store which allowed for the importation of new
@@ -36,6 +38,11 @@ import org.apache.commons.collections4.CollectionUtils;
 public class ProductAPI implements IProductAPI {
 
     /**
+     * Save a reference to the Authentication API for validating access to restricted interface methods
+     */
+    private IAuthenticationServiceAPI authenticationAPI;
+
+    /**
      * The unique countries contained in the Product catalog; each country is unique and only one instance of each is permitted.
      */
     private Set<Country> countries;
@@ -62,6 +69,7 @@ public class ProductAPI implements IProductAPI {
         this.countries = new HashSet<Country>() { };
         this.devices = new HashSet<Device>(){ };
         this.contentItems = new HashSet<Content>(){ };
+        this.authenticationAPI = AuthenticationServiceAPI.getInstance();
     }
 
     /**
@@ -85,9 +93,11 @@ public class ProductAPI implements IProductAPI {
      * @param guid the string access token to check for authentication and authorization for carrying out restricted actions on the ProductAPI
      * @return true if guid is authenticated and authorized to execute restricted actions on ProductAPI, false otherwise
      */
+    /*
     public boolean validateAccessToken(String guid) {
         return guid != null && guid.length() > 0;
     }
+    */
 
     /**
      * Public method for importing countries into the product catalog.  Every
@@ -97,11 +107,11 @@ public class ProductAPI implements IProductAPI {
      * Flyweight pattern).  Countries will be validated before being added to the product catalog; invalid countries
      * will be skipped over and not added.
      *
-     * @param guid      a string token for a validated and authenticated user to allow restricted interface actions
-     * @param countries list of {@link cscie97.asn4.ecommerce.product.Country} objects to add to the product catalog
+     * @param tokenID    a string tokenID for a validated and authenticated user to allow restricted interface actions
+     * @param countries  list of {@link cscie97.asn4.ecommerce.product.Country} objects to add to the product catalog
      */
-    public void importCountries(String guid, List<Country> countries) {
-        if (validateAccessToken(guid)) {
+    public void importCountries(String tokenID, List<Country> countries) {
+        if (authenticationAPI.mayAccess(tokenID, PermissionType.CREATE_COUNTRY)) {
             for (Country country : countries) {
                 if (Country.validateCountry(country)) {
                     this.countries.add(country);
@@ -118,11 +128,11 @@ public class ProductAPI implements IProductAPI {
      * Flyweight pattern).  Devices will be validated before being added to the product catalog; invalid devices
      * will be skipped over and not added.
      *
-     * @param guid    a string token for a validated and authenticated user to allow restricted interface actions
-     * @param devices list of {@link cscie97.asn4.ecommerce.product.Device} objects to add to the product catalog
+     * @param tokenID  a string tokenID for a validated and authenticated user to allow restricted interface actions
+     * @param devices  list of {@link cscie97.asn4.ecommerce.product.Device} objects to add to the product catalog
      */
-    public void importDevices(String guid, List<Device> devices) {
-        if (validateAccessToken(guid)) {
+    public void importDevices(String tokenID, List<Device> devices) {
+        if (authenticationAPI.mayAccess(tokenID, PermissionType.CREATE_DEVICE)) {
             for (Device device : devices) {
                 if (Device.validateDevice(device)) {
                     this.devices.add(device);
@@ -140,22 +150,19 @@ public class ProductAPI implements IProductAPI {
      * based on the {@link cscie97.asn4.ecommerce.product.ContentType} of each item before being added to the product
      * catalog; invalid content items will be skipped over and not added.
      *
-     * @param guid         a string token for a validated and authenticated user to allow restricted interface actions
-     * @param contentItems list of {@link cscie97.asn4.ecommerce.product.Content} objects to add to the product catalog
+     * @param tokenID       a string token for a validated and authenticated user to allow restricted interface actions
+     * @param contentItems  list of {@link cscie97.asn4.ecommerce.product.Content} objects to add to the product catalog
      */
-    public void importContent(String guid, List<Content> contentItems) {
-        if (validateAccessToken(guid)) {
+    public void importContent(String tokenID, List<Content> contentItems) {
+        if (authenticationAPI.mayAccess(tokenID, PermissionType.ADD_CONTENT)) {
             for (Content contentItem : contentItems) {
                 if (contentItem instanceof Application && Application.validateContent(contentItem)) {
-                //if (contentItem instanceof Application && Application.validateContent((Application)contentItem)) {
                     this.contentItems.add(contentItem);
                 }
                 else if (contentItem instanceof Wallpaper && Wallpaper.validateContent(contentItem)) {
-                //else if (contentItem instanceof Wallpaper && Wallpaper.validateContent((Wallpaper)contentItem)) {
                     this.contentItems.add(contentItem);
                 }
                 else if (contentItem instanceof Ringtone && Ringtone.validateContent(contentItem)) {
-                //else if (contentItem instanceof Ringtone && Ringtone.validateContent((Ringtone)contentItem)) {
                     this.contentItems.add(contentItem);
                 }
             }

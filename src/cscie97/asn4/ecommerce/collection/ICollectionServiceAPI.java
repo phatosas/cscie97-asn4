@@ -24,11 +24,11 @@ public interface ICollectionServiceAPI {
      * Restricted interface; will validate GUID token before adding content to a collection.  Adds the passed
      * collection to the CollectionService catalog at the top-level.
      *
-     * @param guid        the string access token to check for authentication and authorization for carrying out
+     * @param tokenID     the string access tokenID to check for authentication and authorization for carrying out
      *                    restricted actions on the CollectionServiceAPI
      * @param collection  the {@link cscie97.asn4.ecommerce.collection.Collection} to add to the Collection catalog
      */
-    public void addCollection(String guid, Collection collection);
+    public void addCollection(String tokenID, Collection collection);
 
     /**
      * Restricted interface; will validate GUID token before adding content to a collection.  Looks up the
@@ -41,7 +41,7 @@ public interface ICollectionServiceAPI {
      * {@link cscie97.asn4.ecommerce.product.IProductAPI}, or {@link cscie97.asn4.ecommerce.collection.Collection}
      * objects.
      *
-     * @param guid          the string access token to check for authentication and authorization for carrying out
+     * @param tokenID       the string access token to check for authentication and authorization for carrying out
      *                      restricted actions on the CollectionServiceAPI
      * @param collectionId  the collection ID of the {@link cscie97.asn4.ecommerce.collection.Collection} to add the
      *                      collectible to
@@ -49,7 +49,7 @@ public interface ICollectionServiceAPI {
      *                      {@link cscie97.asn4.ecommerce.collection.ContentProxy} or a
      *                      {@link cscie97.asn4.ecommerce.collection.Collection} item) to add to the found Collection
      */
-    public void addContentToCollection(String guid, String collectionId, Collectible collectible);
+    public void addContentToCollection(String tokenID, String collectionId, Collectible collectible);
 
     /**
      * Given a collection ID, search for any {@link cscie97.asn4.ecommerce.collection.Collection} that matches that
@@ -103,7 +103,7 @@ public interface ICollectionServiceAPI {
      * defined, it is immediately executed so that the child elements of the
      * {@link cscie97.asn4.ecommerce.collection.DynamicCollection} are present.
      *
-     * @param guid            the string access token to check for authentication and authorization for carrying out
+     * @param tokenID         the string access token to check for authentication and authorization for carrying out
      *                        restricted actions on the CollectionServiceAPI
      * @param collectionId    the collection ID of the {@link cscie97.asn4.ecommerce.collection.DynamicCollection} to
      *                        define the add the search criteria for
@@ -111,20 +111,6 @@ public interface ICollectionServiceAPI {
      *                        {@link cscie97.asn4.ecommerce.collection.ContentProxy} or a
      *                        {@link cscie97.asn4.ecommerce.collection.Collection} item) to add to the found Collection
      */
-    public void setDynamicCollectionSearchCriteria(String guid, String collectionId, ContentSearch searchCriteria);
-
-    /**
-     * Verifies that the <b>guid</b> access token passed is authenticated and authorized for carrying out
-     * restricted actions on the CollectionServiceAPI (such as adding new Collections, adding Content to Collection,
-     * etc.).
-     * <b>Note that for this version of the CollectionServiceAPI, this method is mocked and will return true for
-     * any string passed.</b>
-     *
-     * @param guid  the string access token to check for authentication and authorization for carrying out
-     *              restricted actions on the CollectionServiceAPI
-     * @return      true if guid is authenticated and authorized to execute restricted actions on CollectionServiceAPI,
-     *              false otherwise
-     */
-    public boolean validateAccessToken(String guid);
+    public void setDynamicCollectionSearchCriteria(String tokenID, String collectionId, ContentSearch searchCriteria);
 
 }

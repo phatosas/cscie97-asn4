@@ -20,9 +20,7 @@ public class User extends Item {
 
     private Set<Entitlement> entitlements = new HashSet<Entitlement>();
 
-    //private Set<AccessToken> accessTokens = new HashSet<AccessToken>();
     private AccessToken token;
-
 
     /**
      * Class constructor.
@@ -57,11 +55,6 @@ public class User extends Item {
         this(id, name, String.format("User account for %s", name) );
     }
 
-
-
-
-
-
     public Set<Credentials> getCredentials() {
         return credentials;
     }
@@ -78,16 +71,6 @@ public class User extends Item {
         this.entitlements = entitlements;
     }
 
-    /*
-    public Set<AccessToken> getAccessTokens() {
-        return accessTokens;
-    }
-
-    public void setAccessTokens(Set<AccessToken> accessTokens) {
-        this.accessTokens = accessTokens;
-    }
-    */
-
     public AccessToken getAccessToken() {
         return token;
     }
@@ -95,12 +78,6 @@ public class User extends Item {
     public void setAccessToken(AccessToken accessToken) {
         this.token = accessToken;
     }
-
-
-
-
-
-
 
     public void addCredential(Credentials credential) {
         this.credentials.add(credential);
@@ -111,20 +88,25 @@ public class User extends Item {
         addCredential(credential);
     }
 
-
     public void addEntitlement(Entitlement entitlement) {
         this.entitlements.add(entitlement);
     }
 
-    //public void addAccessToken(AccessToken token) {
-    //    this.accessTokens.add(token);
-    //}
-
-
     public boolean hasPermission(String permissionID) {
-
-        // TODO: iterate over every item in "entitlements", return true as soon as encountered one with same ID
-
+        for (Entitlement e : getEntitlements()) {
+            if (e.getID().equals(permissionID)) {
+                return true;
+            }
+            else if (e instanceof Role) {
+                RoleIterator iterator = ((Role) e).getIterator();
+                while (iterator.hasNext()) {
+                    Entitlement e2 = iterator.next();
+                    if (e2.getID().equals(permissionID)) {
+                        return true;
+                    }
+                }
+            }
+        }
         return false;
     }
 
@@ -139,9 +121,6 @@ public class User extends Item {
         }
         return false;
     }
-
-
-
 
     /**
      * Since {@link cscie97.asn4.ecommerce.product.Content} objects may be added to collections, and also since
@@ -167,20 +146,10 @@ public class User extends Item {
 
         User rhs = (User) compare;
         return new EqualsBuilder()
-                //.appendSuper(super.equals(compare))
-                .append(this.getID(), rhs.getID())
-                .append(this.getName(), rhs.getName())
-                .append(this.getDescription(), rhs.getDescription())
-                        //.append(this.authorName, rhs.getAuthorName())
-                        //.append(this.rating, rhs.getRating())
-                        //.append(this.categories, rhs.getCategories())
-                        //.append(this.compatibleDevices, rhs.getCompatibleDevices())
-                        //.append(this.price, rhs.getPrice())
-                        //.append(this.allowedInCountries, rhs.getAllowedInCountries())
-                        //.append(this.supportedLanguages, rhs.getSupportedLanguages())
-                        //.append(this.imageURL, rhs.getImageURL())
-                        //.append(this.contentType, rhs.getContentType())
-                .isEquals();
+                    .append(this.getID(), rhs.getID())
+                    .append(this.getName(), rhs.getName())
+                    .append(this.getDescription(), rhs.getDescription())
+                    .isEquals();
     }
 
     /**
@@ -198,21 +167,10 @@ public class User extends Item {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(7867, 5653)
-                .append(this.getID())
-                .append(this.getName())
-                .append(this.getDescription())
-                        //.append(this.rating)
-                        //.append(this.categories)
-                        //.append(this.compatibleDevices)
-                        //.append(this.price)
-                        //.append(this.allowedInCountries)
-                        //.append(this.supportedLanguages)
-                        //.append(this.imageURL)
-                        //.append(this.contentType)
-                .toHashCode();
+                    .append(this.getID())
+                    .append(this.getName())
+                    .append(this.getDescription())
+                    .toHashCode();
     }
-
-
-
 
 }

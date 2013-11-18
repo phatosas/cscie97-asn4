@@ -8,4 +8,7 @@ package cscie97.asn4.ecommerce.authentication;
  * To change this template use File | Settings | File Templates.
  */
 public class AuthenticationVisitor {
+
+    // TODO: apply the Visitor pattern here to build up an invetory
+
 }

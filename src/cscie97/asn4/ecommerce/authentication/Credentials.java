@@ -23,22 +23,14 @@ public class Credentials {
     public Credentials(String username, String password) {
         this.username = username;
         this.password = password;
-
         try {
             String hashedAndSaltedPassword = PasswordHash.createHash(password);
-
             this.passwordHash = hashedAndSaltedPassword;
-
             String[] parts = hashedAndSaltedPassword.split(":");
-
             if (parts != null && parts.length == 3) {
                 // first part is number of pbkdf2 iterations used to compute the hash
                 this.passwordSalt = parts[1];  // second part is the salt
-                //this.passwordHash = parts[2];  // third part is the hash itself
-
-                //this.passwordHash = hashedAndSaltedPassword;
             }
-            //this.passwordHash = PasswordHash.createHash(password);
         }
         catch (NoSuchAlgorithmException nsae) { }
         catch (InvalidKeySpecException ikse) { }
@@ -52,7 +44,6 @@ public class Credentials {
         this.username = username;
     }
 
-
     public String getPasswordHash() {
         return passwordHash;
     }
@@ -60,7 +51,6 @@ public class Credentials {
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
     }
-
 
     public String getPassword() {
         return password;

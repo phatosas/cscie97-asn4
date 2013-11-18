@@ -20,13 +20,10 @@ public abstract class Entitlement extends Item {
      * @param name                the authentication item name
      * @param description         authentication item description
      */
-    public Entitlement(String id, String name, String description)
-    {
-        //super(id,name,description);
+    public Entitlement(String id, String name, String description) {
         this.setID(id);
         this.setName(name);
         this.setDescription(description);
-
     }
 
     public Entitlement() {
@@ -36,7 +33,6 @@ public abstract class Entitlement extends Item {
     public String acceptVisitor(AuthenticationVisitor visitor) {
         return String.format("ID: %s, NAME: %s, DESCRIPTION: %s", this.getID(), this.getName(), this.getDescription());
     }
-
 
     /**
      * Since {@link cscie97.asn4.ecommerce.product.Content} objects may be added to collections, and also since
@@ -88,6 +84,4 @@ public abstract class Entitlement extends Item {
                     .append(this.getDescription())
                     .toHashCode();
     }
-
-
 }

@@ -28,17 +28,9 @@ public class Role extends Entitlement {
      * @return  the iterator for the Role
      */
     public RoleIterator getIterator() {
-        /*
-        if (iterator == null) {
-            this.iterator = new RoleIterator(this);
-        }
-        return this.iterator;
-        */
-
         this.iterator = new RoleIterator(this);
         return this.iterator;
     }
-
 
     private List<Entitlement> children = new ArrayList<Entitlement>();
 
@@ -66,9 +58,6 @@ public class Role extends Entitlement {
         this.children.addAll(entitlements);
     }
 
-
-
-
     /**
      * Since {@link cscie97.asn4.ecommerce.product.Content} objects may be added to collections, and also since
      * the {@link cscie97.asn4.ecommerce.product.IProductAPI} enforces that all content items be unique, this method
@@ -93,20 +82,10 @@ public class Role extends Entitlement {
 
         Role rhs = (Role) compare;
         return new EqualsBuilder()
-                //.appendSuper(super.equals(compare))
-                .append(this.getID(), rhs.getID())
-                .append(this.getName(), rhs.getName())
-                .append(this.getDescription(), rhs.getDescription())
-                //.append(this.authorName, rhs.getAuthorName())
-                //.append(this.rating, rhs.getRating())
-                //.append(this.categories, rhs.getCategories())
-                //.append(this.compatibleDevices, rhs.getCompatibleDevices())
-                //.append(this.price, rhs.getPrice())
-                //.append(this.allowedInCountries, rhs.getAllowedInCountries())
-                //.append(this.supportedLanguages, rhs.getSupportedLanguages())
-                //.append(this.imageURL, rhs.getImageURL())
-                //.append(this.contentType, rhs.getContentType())
-                .isEquals();
+                    .append(this.getID(), rhs.getID())
+                    .append(this.getName(), rhs.getName())
+                    .append(this.getDescription(), rhs.getDescription())
+                    .isEquals();
     }
 
     /**
@@ -124,23 +103,9 @@ public class Role extends Entitlement {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(1787, 3299)
-                .append(this.getID())
-                .append(this.getName())
-                .append(this.getDescription())
-                //.append(this.rating)
-                //.append(this.categories)
-                //.append(this.compatibleDevices)
-                //.append(this.price)
-                //.append(this.allowedInCountries)
-                //.append(this.supportedLanguages)
-                //.append(this.imageURL)
-                //.append(this.contentType)
-                .toHashCode();
+                    .append(this.getID())
+                    .append(this.getName())
+                    .append(this.getDescription())
+                    .toHashCode();
     }
-
-
-
-
-
-
 }

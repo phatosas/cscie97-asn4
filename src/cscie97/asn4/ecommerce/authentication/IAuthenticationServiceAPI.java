@@ -47,19 +47,4 @@ public interface IAuthenticationServiceAPI {
 
     public String getInventory();
 
-    /*
-    public User getUserByUserID(String userID);
-
-    public User getUserByUsername(String username);
-
-    public User getUserByAccessTokenID(String tokenID);
-    */
-/*
-    User getUserByUserID(String userID);
-
-    User getUserByUsername(String username);
-
-    User getUserByAccessTokenID(String tokenID);
-*/
-
 }

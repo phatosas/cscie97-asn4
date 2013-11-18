@@ -13,14 +13,11 @@ import java.util.*;
  */
 public class AuthenticationServiceAPI implements IAuthenticationServiceAPI {
 
-
     private static final String SUPER_ADMINISTRATOR_USERNAME = "dkilleffer";
 
     private static final String SUPER_ADMINISTRATOR_PASSWORD = "secret";
 
     private User superUser;
-
-
 
     /**
      * The unique top-level Entitlements contained in the Authentication catalog; each Entitlement may only be
@@ -33,16 +30,10 @@ public class AuthenticationServiceAPI implements IAuthenticationServiceAPI {
      */
     private Set<Service> services = new HashSet<Service>();
 
-
     /**
      * The unique registered Users contained in the Authentication catalog.
      */
     private Set<User> users = new HashSet<User>();
-
-
-
-
-
 
     /**
      * Singleton instance of the AuthenticationServiceAPI
@@ -59,7 +50,6 @@ public class AuthenticationServiceAPI implements IAuthenticationServiceAPI {
         createSuperUser();
     }
 
-
     private void createSuperUser() {
         if (this.superUser == null) {
             // create a hard-coded special "Super User" so that we can use that super user to import the Authentication data
@@ -70,20 +60,7 @@ public class AuthenticationServiceAPI implements IAuthenticationServiceAPI {
             Credentials credential = new Credentials(SUPER_ADMINISTRATOR_USERNAME, SUPER_ADMINISTRATOR_PASSWORD);
             superUser.addCredential(credential);
 
-
             /// create new AccessToken for super user
-            /*
-            Calendar cal = Calendar.getInstance(); // creates calendar
-            cal.setTime(new Date()); // sets calendar time/date
-            cal.add(Calendar.HOUR_OF_DAY, 1); // adds one hour
-
-            AccessToken token = new AccessToken();
-            token.setId( UUID.randomUUID().toString() );
-            token.setExpirationTime( cal.getTime() );  // expire in 1 hour
-            token.setLastUpdated( new Date() );
-            token.setUserID( superUser.getID() );
-            superUser.setAccessToken(token);
-            */
             superUser.setAccessToken( new AccessToken(superUser.getID()) );
 
 
@@ -146,7 +123,6 @@ public class AuthenticationServiceAPI implements IAuthenticationServiceAPI {
         return instance;
     }
 
-
     @Override
     public void addService(String tokenID, Service service) {
         if (this.mayAccess(tokenID, "define_service")) {
@@ -160,7 +136,6 @@ public class AuthenticationServiceAPI implements IAuthenticationServiceAPI {
             this.users.add(user);
         }
     }
-
 
     @Override
     public void addRole(String tokenID, Role role) {
@@ -229,7 +204,6 @@ public class AuthenticationServiceAPI implements IAuthenticationServiceAPI {
         }
     }
 
-
     @Override
     public void createService(String tokenID, String id, String name, String description) {
         this.addService(tokenID, new Service(id,name,description) );
@@ -249,8 +223,6 @@ public class AuthenticationServiceAPI implements IAuthenticationServiceAPI {
     public void createUser(String tokenID, String id, String name) {
         this.addUser(tokenID, new User(id, name, "User account for"+name));
     }
-
-
 
     @Override
     public AccessToken login(String username, String password) throws AccessDeniedException {
@@ -289,25 +261,12 @@ public class AuthenticationServiceAPI implements IAuthenticationServiceAPI {
             if (foundToken != null && !foundToken.getExpirationTime().after(new Date())) {
                 return false;
             }
-            // user has a valid AccessToken, now ensure they have the permission they are trying to use
-            for (Entitlement e : foundUser.getEntitlements()) {
-                if (e.getID().equals(permissionID)) {
-                    return true;
-                }
-                else if (e instanceof Role) {
-                    RoleIterator iterator = ((Role) e).getIterator();
-                    while (iterator.hasNext()) {
-                        Entitlement e2 = iterator.next();
-                        if (e2.getID().equals(permissionID)) {
-                            return true;
-                        }
-                    }
-                }
+            else {
+                return foundUser.hasPermission(permissionID);
             }
         }
         return false;
     }
-
 
     public boolean mayAccess(String tokenID, PermissionType permissionType) {
         return mayAccess(tokenID, permissionType.getPermissionName());
@@ -315,11 +274,11 @@ public class AuthenticationServiceAPI implements IAuthenticationServiceAPI {
 
     @Override
     public String getInventory() {
+
+        // TODO: use the visitor pattern to display an inventory of all the classes
+
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
-
-
-
 
 
     /* begin region: Private helper methods */

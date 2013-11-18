@@ -21,7 +21,6 @@ public class AccessToken {
 
     private Date lastUpdated;
 
-
     public AccessToken(String userID) {
         this.id = UUID.randomUUID().toString();
         this.userID = userID;
@@ -33,8 +32,6 @@ public class AccessToken {
         this.expirationTime = cal.getTime();  // expire in 1 hour
         this.lastUpdated = new Date();
     }
-
-
 
     public String getId() {
         return id;

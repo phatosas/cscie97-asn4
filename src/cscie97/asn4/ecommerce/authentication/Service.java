@@ -18,7 +18,6 @@ public class Service extends Item {
 
     private Set<Permission> permissions = new HashSet<Permission>();
 
-
     /**
      * Class constructor.
      *
@@ -51,15 +50,9 @@ public class Service extends Item {
         this.permissions.addAll(permissions);
     }
 
-
-
-
     public String acceptVisitor(AuthenticationVisitor visitor) {
         return String.format("ID: %s, NAME: %s, DESCRIPTION: %s", this.getID(), this.getName(), this.getDescription());
     }
-
-
-
 
     /**
      * Since {@link cscie97.asn4.ecommerce.product.Content} objects may be added to collections, and also since
@@ -84,32 +77,11 @@ public class Service extends Item {
             return true;
 
         Service rhs = (Service) compare;
-
-
-        boolean areEqual = new EqualsBuilder()
-                                    //.appendSuper(super.equals(compare))
-                                    .append(this.getID(), rhs.getID())
-                                    .append(this.getName(), rhs.getName())
-                                    .append(this.getDescription(), rhs.getDescription())
-                                    .isEquals();
-        return areEqual;
-        /*
         return new EqualsBuilder()
-                .appendSuper(super.equals(compare))
-                .append(this.getID(), rhs.getID())
-                .append(this.getName(), rhs.getName())
-                .append(this.getDescription(), rhs.getDescription())
-                        //.append(this.authorName, rhs.getAuthorName())
-                        //.append(this.rating, rhs.getRating())
-                        //.append(this.categories, rhs.getCategories())
-                        //.append(this.compatibleDevices, rhs.getCompatibleDevices())
-                        //.append(this.price, rhs.getPrice())
-                        //.append(this.allowedInCountries, rhs.getAllowedInCountries())
-                        //.append(this.supportedLanguages, rhs.getSupportedLanguages())
-                        //.append(this.imageURL, rhs.getImageURL())
-                        //.append(this.contentType, rhs.getContentType())
-                .isEquals();
-        */
+                    .append(this.getID(), rhs.getID())
+                    .append(this.getName(), rhs.getName())
+                    .append(this.getDescription(), rhs.getDescription())
+                    .isEquals();
     }
 
     /**
@@ -127,20 +99,10 @@ public class Service extends Item {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(6247, 6011)
-                .append(this.getID())
-                .append(this.getName())
-                .append(this.getDescription())
-                        //.append(this.rating)
-                        //.append(this.categories)
-                        //.append(this.compatibleDevices)
-                        //.append(this.price)
-                        //.append(this.allowedInCountries)
-                        //.append(this.supportedLanguages)
-                        //.append(this.imageURL)
-                        //.append(this.contentType)
-                .toHashCode();
+                    .append(this.getID())
+                    .append(this.getName())
+                    .append(this.getDescription())
+                    .toHashCode();
     }
-
-
 
 }

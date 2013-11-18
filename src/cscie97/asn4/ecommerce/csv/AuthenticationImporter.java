@@ -366,23 +366,10 @@ public class AuthenticationImporter extends Importer {
                     }
                 }
 
-                /**
-                // lastly, exercise iterating over ALL the collections
+                // lastly, print out an inventory of all the items in the Authentication Service API catalog
                 System.out.println(String.format("\n******************************\n"));
-                System.out.println("ITERATING OVER ALL COLLECTIONS...\n\n");
-                // per requirements, iterate over all collections and print out their contents
-                CollectionIterator allCollectionsIterator = CollectionServiceAPI.getInstance().getCollectionIterator("staticA");
-                while (allCollectionsIterator.hasNext()) {
-                    Collectible collectible = allCollectionsIterator.next();
-                    System.out.println(collectible);
-
-                }
+                System.out.println( authenticationAPI.getInventory() );
                 System.out.println(String.format("\n******************************\n"));
-                */
-
-
-                // TODO: lastly, generate and display an inventory of all Authentication items, grouped by type
-                int j = 9;
             }
             catch (FileNotFoundException fnfe) {
                 throw new ImportException("Could not find file ["+filename+"] to open for reading", lineNumber, filename, fnfe);

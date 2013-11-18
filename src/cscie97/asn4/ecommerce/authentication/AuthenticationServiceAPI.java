@@ -274,10 +274,33 @@ public class AuthenticationServiceAPI implements IAuthenticationServiceAPI {
 
     @Override
     public String getInventory() {
+        AuthenticationVisitor av = new AuthenticationVisitor();
 
-        // TODO: use the visitor pattern to display an inventory of all the classes
+        // get counts of how many services and users, and how many distinct Permissions/Roles
+        int numServices = this.services.size();
+        int numUsers = this.users.size();
+        int numEntitlements = this.entitlements.size();
 
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        StringBuilder inventory = new StringBuilder();
+        inventory.append("Authentication Service API Inventory\n------------------------------------\n\n");
+        inventory.append(String.format("There are [%d] registered Users.  They are:\n",numUsers));
+        for (User u : users) {
+            inventory.append(av.visitUser(u));
+        }
+
+        inventory.append("\n\n");
+        inventory.append(String.format("There are [%d] defined Services.  They are:\n",numServices));
+        for (Service s : services) {
+            inventory.append(av.visitService(s));
+        }
+
+        inventory.append("\n\n");
+        inventory.append(String.format("There are [%d] defined Entitlements (Roles or Permissions).  They are:\n",numEntitlements));
+        for (Entitlement e : entitlements) {
+            inventory.append(av.visitEntitlement(e));
+        }
+
+        return inventory.toString();
     }
 
 

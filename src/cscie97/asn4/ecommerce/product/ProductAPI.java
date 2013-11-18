@@ -154,7 +154,7 @@ public class ProductAPI implements IProductAPI {
      * @param contentItems  list of {@link cscie97.asn4.ecommerce.product.Content} objects to add to the product catalog
      */
     public void importContent(String tokenID, List<Content> contentItems) {
-        if (authenticationAPI.mayAccess(tokenID, PermissionType.ADD_CONTENT)) {
+        if (authenticationAPI.mayAccess(tokenID, PermissionType.CREATE_PRODUCT)) {
             for (Content contentItem : contentItems) {
                 if (contentItem instanceof Application && Application.validateContent(contentItem)) {
                     this.contentItems.add(contentItem);

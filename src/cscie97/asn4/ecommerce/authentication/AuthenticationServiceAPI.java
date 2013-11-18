@@ -95,18 +95,23 @@ public class AuthenticationServiceAPI implements IAuthenticationServiceAPI {
             String authServiceDescription = "Manage Authentication Configuration and Control Access to Restricted Service Interfaces";
             Service authenticationService = new Service(authServiceID, authServiceName, authServiceDescription);
 
-
-            Permission p1 = new Permission("define_service","Define Service Permission","Permission to create a new service");
-            Permission p2 = new Permission("define_permission","Define Permission Permission","Permission to create a new permission");
-            Permission p3 = new Permission("define_role","Define Role Permission","Permission to create a new role");
-            Permission p4 = new Permission("add_entitlement","Add entitlement to role permission","Permission to add an entitlement to a role");
-            Permission p5 = new Permission("create_user","Create User Permission","Permission to create create a user");
-            Permission p6 = new Permission("add_credential_to_user","Add Credential to User Permission","Permission to add credentials to a user");
-            Permission p7 = new Permission("add_entitlement_to_user","Add Entitlement to User Permission","Permission to add entitlements to a user");
+            Permission p1  = new Permission(PermissionType.DEFINE_SERVICE,"Define Service Permission","Permission to create a new service");
+            Permission p2  = new Permission(PermissionType.DEFINE_PERMISSION,"Define Permission Permission","Permission to create a new permission");
+            Permission p3  = new Permission(PermissionType.DEFINE_ROLE,"Define Role Permission","Permission to create a new role");
+            Permission p4  = new Permission(PermissionType.ADD_ENTITLEMENT_TO_ROLE,"Add entitlement to role permission","Permission to add an entitlement to a role");
+            Permission p5  = new Permission(PermissionType.CREATE_USER,"Create User Permission","Permission to create create a user");
+            Permission p6  = new Permission(PermissionType.ADD_CREDENTIAL_TO_USER,"Add Credential to User Permission","Permission to add credentials to a user");
+            Permission p7  = new Permission(PermissionType.ADD_ENTITLEMENT_TO_USER,"Add Entitlement to User Permission","Permission to add entitlements to a user");
+            Permission p8  = new Permission(PermissionType.CREATE_COLLECTION,"Create Collection Permission","Permission to create a new collection");
+            Permission p9  = new Permission(PermissionType.ADD_CONTENT,"Add Collection Content Permission","Permission to add content to an existing collection");
+            Permission p10 = new Permission(PermissionType.DEFINE_COLLECTION_SEARCH_CRITERIA,"Define Dynamic Collection Search Criteria Permission","Define the search criteria used by DynamicCollections");
+            Permission p11 = new Permission(PermissionType.CREATE_PRODUCT,"Create Product Permission","Permission to create a new product");
+            Permission p12 = new Permission(PermissionType.CREATE_COUNTRY,"Create Country Permission","Permission to create a new country");
+            Permission p13 = new Permission(PermissionType.CREATE_DEVICE,"Create Device Permission","Permission to create a new device");
 
             // define all Authentication Service Permissions
-            Set<Entitlement> allAuthPermissionsSet = new HashSet<Entitlement>(Arrays.asList(p1, p2, p3, p4, p5, p6, p7));
-            Set<Permission> allAuthPermissionsList = new HashSet<Permission>(Arrays.asList(p1, p2, p3, p4, p5, p6, p7));
+            Set<Entitlement> allAuthPermissionsSet = new HashSet<Entitlement>(Arrays.asList(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13));
+            Set<Permission> allAuthPermissionsList = new HashSet<Permission>(Arrays.asList(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13));
 
             // define primary Authentication SUPER USER Role, with all appropriate Permissions
             String authServiceSuperRoleID = "authentication_admin_role";

@@ -76,9 +76,6 @@ public class TestDriver {
                 // login as one of the Product Admins to process the Content CSV files
                 AccessToken productAdminToken = authenticationAPI.login("sam", "secret");
 
-                //ContentImporter.importCountryFile(myGUID, args[1]);
-                //ContentImporter.importDeviceFile(myGUID, args[2]);
-                //ContentImporter.importContentFile(myGUID, args[3]);
                 ContentImporter.importCountryFile(productAdminToken.getId(), args[1]);
                 ContentImporter.importDeviceFile(productAdminToken.getId(), args[2]);
                 ContentImporter.importContentFile(productAdminToken.getId(), args[3]);

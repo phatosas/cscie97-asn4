@@ -285,22 +285,22 @@ public class AuthenticationImporter extends Importer {
         // add_entitlement_to_user
         //
 
-        boolean mayDefineService = authenticationAPI.mayAccess(guid, "define_service");
-        boolean mayDefinePermission = authenticationAPI.mayAccess(guid, "define_permission");
-        boolean mayDefineRole = authenticationAPI.mayAccess(guid, "define_role");
-        boolean mayAddEntitlement = authenticationAPI.mayAccess(guid, "add_entitlement");
-        boolean mayCreateUser = authenticationAPI.mayAccess(guid, "create_user");
-        boolean mayAddUserCredentials = authenticationAPI.mayAccess(guid, "add_credential_to_user");
-        boolean mayAddUserEntitlement = authenticationAPI.mayAccess(guid, "add_entitlement_to_user");
+        boolean mayDefineService = authenticationAPI.mayAccess(guid, PermissionType.DEFINE_SERVICE);
+        boolean mayDefinePermission = authenticationAPI.mayAccess(guid, PermissionType.DEFINE_PERMISSION);
+        boolean mayDefineRole = authenticationAPI.mayAccess(guid, PermissionType.DEFINE_ROLE);
+        boolean mayAddEntitlement = authenticationAPI.mayAccess(guid, PermissionType.ADD_ENTITLEMENT_TO_ROLE);
+        boolean mayCreateUser = authenticationAPI.mayAccess(guid, PermissionType.CREATE_USER);
+        boolean mayAddUserCredentials = authenticationAPI.mayAccess(guid, PermissionType.ADD_CREDENTIAL_TO_USER);
+        boolean mayAddUserEntitlement = authenticationAPI.mayAccess(guid, PermissionType.ADD_ENTITLEMENT_TO_USER);
 
         if (
-                authenticationAPI.mayAccess(guid, "define_service") &&
-                authenticationAPI.mayAccess(guid, "define_permission") &&
-                authenticationAPI.mayAccess(guid, "define_role") &&
-                authenticationAPI.mayAccess(guid, "add_entitlement") &&
-                authenticationAPI.mayAccess(guid, "create_user") &&
-                authenticationAPI.mayAccess(guid, "add_credential_to_user") &&
-                authenticationAPI.mayAccess(guid, "add_entitlement_to_user")
+                authenticationAPI.mayAccess(guid, PermissionType.DEFINE_SERVICE) &&
+                authenticationAPI.mayAccess(guid, PermissionType.DEFINE_PERMISSION) &&
+                authenticationAPI.mayAccess(guid, PermissionType.DEFINE_ROLE) &&
+                authenticationAPI.mayAccess(guid, PermissionType.ADD_ENTITLEMENT_TO_ROLE) &&
+                authenticationAPI.mayAccess(guid, PermissionType.CREATE_USER) &&
+                authenticationAPI.mayAccess(guid, PermissionType.ADD_CREDENTIAL_TO_USER) &&
+                authenticationAPI.mayAccess(guid, PermissionType.ADD_ENTITLEMENT_TO_USER)
         ) {
             int lineNumber = 0;  // keep track of what lineNumber we're reading in from the input file for exception handling
             String line;  // store the text on each line as it's processed

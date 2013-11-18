@@ -207,6 +207,14 @@ public class AuthenticationServiceAPI implements IAuthenticationServiceAPI {
         }
     }
 
+    @Override
+    public void addCredentialToUser(String tokenID, String userID, String username, String password) {
+        if (mayAccess(tokenID), "add_credential")) {
+
+
+        }
+    }
+
 
     @Override
     public void createService(String tokenID, String id, String name, String description) {
@@ -271,6 +279,19 @@ public class AuthenticationServiceAPI implements IAuthenticationServiceAPI {
     @Override
     public String getInventory() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+
+
+
+    @Override
+    public User getUserByUserID(String userID) {
+        for (User user : users) {
+            if (user.getID().equals(userID) ) {
+                return user;
+            }
+        }
+        return null;
     }
 
     @Override

@@ -27,6 +27,7 @@ public interface IAuthenticationServiceAPI {
 
     public void addPermissionToRole(String tokenID, String roleID, String permissionID);
 
+    public void addCredentialToUser(String userID, String username, String password);
 
     public void createService(String tokenID, String id, String name, String description);
 
@@ -35,6 +36,10 @@ public interface IAuthenticationServiceAPI {
     public void createRole(String tokenID, String id, String name, String description);
 
     public void createUser(String tokenID, String id, String name);
+
+
+
+
 
     public AccessToken login(String username, String password) throws AccessDeniedException;
 
@@ -45,6 +50,8 @@ public interface IAuthenticationServiceAPI {
     public boolean mayAccess(String tokenID, String permissionID);
 
     public String getInventory();
+
+    public User getUserByUserID(String userID);
 
     public User getUserByUsername(String username);
 

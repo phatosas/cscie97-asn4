@@ -188,14 +188,26 @@ public class AuthenticationImporter extends Importer {
         System.out.println(String.format("Adding User to AuthenticationService catalog: [%s]\n", user));
     }
 
-
-
     private static void addEntitlementToRole(String guid, String[] authenticationData) throws ParseException {
-     /*
-     3
-     # add_entitlement_to_role, <role_id>, <entitlement_id>
-     add_entitlement_to_role, authentication_admin_role, define_service
-     */
+        // ensure that we have exactly 3 elements passed and that the first element is "add_entitlement_to_role"
+        if (authenticationData == null ||
+                authenticationData.length != 3 ||
+                !authenticationData[0].trim().equalsIgnoreCase("add_entitlement_to_role")
+        ) {
+            throw new ParseException("Import Authentication line contains invalid data when calling addEntitlementToRole(): "+ StringUtils.join(authenticationData, ","),
+                    null,
+                    0,
+                    null,
+                    null);
+        }
+
+        String roleID = authenticationData[1].trim();
+        String entitlementID = authenticationData[2].trim();
+
+        IAuthenticationServiceAPI authenticationAPI = AuthenticationServiceAPI.getInstance();
+        authenticationAPI.addPermissionToRole(guid, roleID, entitlementID);
+
+        System.out.println(String.format("Adding Entitlement ID [%s] to Role ID [%s]\n", roleID, entitlementID));
     }
 
     private static void addCredential(String guid, String[] authenticationData) throws ParseException {
@@ -203,7 +215,48 @@ public class AuthenticationImporter extends Importer {
      4
      # add_credential, <user_id>, <login_name>, <password>
      add_credential authentication_admin, jill, 1234567
+
+
+# add_credential
+# add_credential, <user_id>, <login_name>, <password>
+add_credential, product_admin, sam, secret
+add_credential product_admin, sam2, secret2
+add_credential product_dev, joe, 1234
+add_credential collection_admin, lucy, 4567
+add_credential authentication_admin, jill, 1234567
+
      */
+
+        // ensure that we have exactly 4 elements passed and that the first element is "add_credential"
+        if (authenticationData == null ||
+            authenticationData.length != 4 ||
+            !authenticationData[0].trim().equalsIgnoreCase("add_credential")
+        ) {
+            throw new ParseException("Import Authentication line contains invalid data when calling addCredential(): "+ StringUtils.join(authenticationData, ","),
+                    null,
+                    0,
+                    null,
+                    null);
+        }
+
+        String userID = authenticationData[1].trim();
+        String username = authenticationData[2].trim();
+        String password = authenticationData[3].trim();
+
+
+        IAuthenticationServiceAPI authenticationAPI = AuthenticationServiceAPI.getInstance();
+
+        User foundUser = authenticationAPI.getUserByUserID(userID);
+        if (foundUser != null) {
+
+            Credentials c = new Credentials();
+
+
+            System.out.println(String.format("Adding Credentials username [%s] password [%s] to User ID [%s]\n", username, password, userID));
+
+        }
+
+
     }
 
     private static void addEntitlementToUser(String guid, String[] authenticationData) throws ParseException {
@@ -212,6 +265,7 @@ public class AuthenticationImporter extends Importer {
      # add_entitlement_to_user, <userid>, <entitlementid>
      add_entitlement_to_user, authentication_admin, authentication_admin_role
      */
+
     }
 
 

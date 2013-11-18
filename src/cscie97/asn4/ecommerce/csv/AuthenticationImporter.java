@@ -90,7 +90,7 @@ public class AuthenticationImporter extends Importer {
     private static void definePermission(String guid, String[] authenticationData) throws ParseException {
         // ensure that we have at least 5 elements passed and that the first element is "define_permission"
         if (authenticationData == null ||
-                authenticationData.length != 4 ||
+                authenticationData.length != 5 ||
                 !authenticationData[0].trim().equalsIgnoreCase("define_permission")
                 ) {
             throw new ParseException("Import Authentication line contains invalid data when calling definePermission(): "+ StringUtils.join(authenticationData, ","),
@@ -308,7 +308,6 @@ public class AuthenticationImporter extends Importer {
                             }
                             // define permission
                             if (cleanedColumns.length == 5 && cleanedColumns[0].equalsIgnoreCase("define_permission")) {
-                                //AuthenticationImporter.definePermission(guid, cleanedColumns);
                                 AuthenticationImporter.definePermission(guid, cleanedColumns);
                             }
                             // define role
@@ -361,6 +360,7 @@ public class AuthenticationImporter extends Importer {
 
 
                 // TODO: lastly, generate and display an inventory of all Authentication items, grouped by type
+                int j = 9;
 
 
             }

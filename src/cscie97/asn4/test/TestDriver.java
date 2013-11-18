@@ -25,9 +25,10 @@ import cscie97.asn4.ecommerce.product.ContentSearch;
 public class TestDriver {
 
     /**
-     * Executes the primary test logic.  Accepts four command line arguments that should be CSV files.  Command-line
+     * Executes the primary test logic.  Accepts six command line arguments that should be CSV files.  Command-line
      * arguments should be:
      * <ol>
+     *     <li>filename of Authentication CSV datafile</li>
      *     <li>filename of Countries CSV datafile</li>
      *     <li>filename of Devices CSV datafile</li>
      *     <li>filename of Products CSV datafile</li>
@@ -50,11 +51,12 @@ public class TestDriver {
      * All content item search queries and results, and collection search queries and results, are printed to
      * standard out.
      *
-     * @param args  first argument should a CSV datafile of Countries, second argument should be a CSV datafile of
-     *              Devices, third argument should be a CSV datafile of Content items, fourth argument should be a
-     *              CSV datafile of content search query parameters, and fifth (and last) argument should be a CSV
-     *              datafile of collection definitions, adding content to collections, defining dynamic collection
-     *              search criteria, and collection searches
+     * @param args  first argument should a CSV datafile of Authentication data, second argument should be a CSV
+     *              datafile of Countries, third argument should be a CSV datafile of Devices, fourth argument should
+     *              be a CSV datafile of Content items, fifth argument should be a CSV datafile of content search
+     *              query parameters, and fifth (and last) argument should be a CSV datafile of collection
+     *              definitions, adding content to collections, defining dynamic collection search criteria,
+     *              and collection searches
      */
     public static void main(String[] args) {
         if (args.length == 6) {

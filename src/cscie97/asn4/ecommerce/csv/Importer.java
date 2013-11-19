@@ -6,10 +6,10 @@ package cscie97.asn4.ecommerce.csv;
  *
  * @author David Killeffer &lt;rayden7@gmail.com&gt;
  * @version 1.0
- * @see cscie97.asn4.ecommerce.csv.CollectionImporter
- * @see cscie97.asn4.ecommerce.csv.ContentImporter
+ * @see cscie97.asn4.ecommerce.collection.CollectionImporter
+ * @see cscie97.asn4.ecommerce.product.ContentImporter
  * @see cscie97.asn4.ecommerce.csv.Importer
- * @see cscie97.asn4.ecommerce.csv.SearchEngine
+ * @see cscie97.asn4.ecommerce.product.SearchEngine
  */
 public abstract class Importer {
 

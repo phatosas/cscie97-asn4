@@ -1,13 +1,11 @@
 package cscie97.asn4.test;
 
-import cscie97.asn4.ecommerce.authentication.AccessToken;
-import cscie97.asn4.ecommerce.authentication.AuthenticationServiceAPI;
-import cscie97.asn4.ecommerce.authentication.IAuthenticationServiceAPI;
+import cscie97.asn4.ecommerce.authentication.*;
+import cscie97.asn4.ecommerce.collection.CollectionImporter;
+import cscie97.asn4.ecommerce.collection.CollectionNotFoundException;
 import cscie97.asn4.ecommerce.csv.*;
 import cscie97.asn4.ecommerce.exception.*;
-import cscie97.asn4.ecommerce.product.IProductAPI;
-import cscie97.asn4.ecommerce.product.Content;
-import cscie97.asn4.ecommerce.product.ContentSearch;
+import cscie97.asn4.ecommerce.product.*;
 
 /**
  * Test harness for the CSCI-E 97 Assignment 2.  Reads in several supplied input files to load
@@ -41,7 +39,7 @@ public class TestDriver {
      * {@link ContentImporter#importDeviceFile(String guid, String filename)},
      * {@link ContentImporter#importContentFile(String guid, String filename)} and
      * {@link CollectionImporter#importCollectionsFile(String guid, String filename)}.  Once all Counties, Devices,
-     * and Content are loaded, calls {@link cscie97.asn4.ecommerce.csv.SearchEngine#executeQueryFilename(String filename)} to
+     * and Content are loaded, calls {@link cscie97.asn4.ecommerce.product.SearchEngine#executeQueryFilename(String filename)} to
      * import a CSV of queries to run against the ProductAPI for content items.
      * {@link CollectionImporter#importCollectionsFile(String guid, String filename)} will create new collections,
      * add content items to collections, define the content serch criteria for
@@ -63,7 +61,7 @@ public class TestDriver {
             try {
                 IAuthenticationServiceAPI authenticationAPI = AuthenticationServiceAPI.getInstance();
 
-                ////////////////////////////////////////////////////////////////////////////////////////////////////////
+                //////// exercise the AuthenticationService API ////////
 
                 // login as the "super user" to process the Authentication CSV file
                 AccessToken superToken = authenticationAPI.login("dkilleffer", "secret");
@@ -73,7 +71,7 @@ public class TestDriver {
                 // logout as the "super user" to process the Authentication CSV file
                 authenticationAPI.logout(superToken.getId());
 
-                ////////////////////////////////////////////////////////////////////////////////////////////////////////
+                //////// exercise the ProductAPI ////////
 
                 // login as one of the Product Admins to process the Content CSV files
                 AccessToken productAdminToken = authenticationAPI.login("sam", "secret");
@@ -87,8 +85,7 @@ public class TestDriver {
                 // logout as the product admin user
                 authenticationAPI.logout(productAdminToken.getId());
 
-                ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+                //////// exercise the CollectionServiceAPI ////////
 
                 // login as one of the Collection Admins to process the Collection CSV file
                 AccessToken collectionAdminToken = authenticationAPI.login("lucy", "4567");
@@ -119,12 +116,6 @@ public class TestDriver {
             // reason, so the program should fail and exit
             catch (ImportException ie) {
                 System.out.println(ie.getMessage());
-                System.exit(1);
-            }
-            // if we catch a QueryEngineException, there was a problem running one of the queries in the file, so
-            // the program should fail and exit
-            catch (QueryEngineException qee) {
-                System.out.println(qee.getMessage());
                 System.exit(1);
             }
             // if we catch a CollectionNotFoundException, adding content to collections, defining dynamic collection

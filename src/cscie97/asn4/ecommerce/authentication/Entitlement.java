@@ -1,20 +1,24 @@
 package cscie97.asn4.ecommerce.authentication;
 
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Created with IntelliJ IDEA.
- * User: dkilleffer
- * Date: 11/13/13
- * Time: 10:55 AM
- * To change this template use File | Settings | File Templates.
+ * Abstract parent class for {@link cscie97.asn4.ecommerce.authentication.Role} and
+ * {@link cscie97.asn4.ecommerce.authentication.Permission}.  Since Entitlements can be added to
+ * {@link java.util.Collections}, includes methods for overriding hashCode() and equals().  Parent class of
+ * {@link cscie97.asn4.ecommerce.authentication.Permission} and {@link cscie97.asn4.ecommerce.authentication.Role}.
+ *
+ * @author David Killeffer &lt;rayden7@gmail.com&gt;
+ * @version 1.0
+ * @see cscie97.asn4.ecommerce.authentication.Item
+ * @see cscie97.asn4.ecommerce.authentication.Permission
+ * @see cscie97.asn4.ecommerce.authentication.Role
  */
-public abstract class Entitlement extends Item {
+public abstract class Entitlement extends Item implements IAuthenticationVisitable {
 
     /**
-     * Class constructor.
+     * Abstract class constructor.
      *
      * @param id                  the unique authentication item ID
      * @param name                the authentication item name
@@ -26,22 +30,30 @@ public abstract class Entitlement extends Item {
         this.setDescription(description);
     }
 
-    public Entitlement() {
+    /**
+     * No-argument class constructor.
+     */
+    public Entitlement() { }
 
-    }
-
-    public String acceptVisitor(AuthenticationVisitor visitor) {
-        return String.format("ID: %s, NAME: %s, DESCRIPTION: %s", this.getID(), this.getName(), this.getDescription());
+    /**
+     * Accepts a visitor object for the purposes of building up an inventory of items in the AuthenticationService.
+     *
+     * @param visitor  the visiting object used to build up the inventory
+     * @return  the string representation of the current object for inclusion in a printable inventory
+     */
+    public String acceptVisitor(IAuthenticationVisitor visitor) {
+        return visitor.visitEntitlement(this);
     }
 
     /**
-     * Since {@link cscie97.asn4.ecommerce.product.Content} objects may be added to collections, and also since
-     * the {@link cscie97.asn4.ecommerce.product.IProductAPI} enforces that all content items be unique, this method
-     * provides a way to determine if another {@link cscie97.asn4.ecommerce.product.Content} item is the same as the
-     * current one.  Uses the Apache Commons {@link org.apache.commons.lang3.builder.EqualsBuilder} to determine if
+     * Since {@link cscie97.asn4.ecommerce.authentication.Entitlement} objects may be added to collections, and also
+     * since the {@link cscie97.asn4.ecommerce.authentication.IAuthenticationServiceAPI} enforces that all entitlement
+     * items be unique, this method provides a way to determine if another
+     * {@link cscie97.asn4.ecommerce.authentication.Entitlement} item is the same as the current one based on shared
+     * properties.  Uses the Apache Commons {@link org.apache.commons.lang3.builder.EqualsBuilder} to determine if
      * the two objects are indeed equal to each other.
      *
-     * @param compare  the {@link cscie97.asn4.ecommerce.product.Content} item to compare to the current object to test for equality
+     * @param compare  the item to compare to the current object to test for equality
      * @return  true if the objects are the same, false otherwise
      * @see <a href="http://stackoverflow.com/questions/27581/overriding-equals-and-hashcode-in-java">http://stackoverflow.com/questions/27581/overriding-equals-and-hashcode-in-java</a>
      * @see <a href="http://www.java-tutorial.ch/core-java-tutorial/equalsbuilder">http://www.java-tutorial.ch/core-java-tutorial/equalsbuilder</a>
@@ -65,11 +77,11 @@ public abstract class Entitlement extends Item {
     }
 
     /**
-     * Since {@link cscie97.asn4.ecommerce.product.Content} objects may be added to collections, and also since
-     * the {@link cscie97.asn4.ecommerce.product.IProductAPI} enforces that all content items be unique, this method
-     * provides a way to get the unique hash code for the current content item.  Uses the Apache Commons
-     * {@link org.apache.commons.lang3.builder.HashCodeBuilder} to generate a unique hash code for the current item
-     * based on two randomly chosen unique prime numbers and all the object properties.
+     * Since {@link cscie97.asn4.ecommerce.authentication.Item} objects may be added to collections, and also since
+     * the {@link cscie97.asn4.ecommerce.authentication.IAuthenticationServiceAPI} enforces that all authentication
+     * items be unique, this method provides a way to get the unique hash code for the current item.  Uses the Apache
+     * Commons {@link org.apache.commons.lang3.builder.HashCodeBuilder} to generate a unique hash code for the current
+     * item based on two randomly chosen unique prime numbers and all the object properties.
      *
      * @return  a unique integer hash code for this particular object
      * @see <a href="http://stackoverflow.com/questions/27581/overriding-equals-and-hashcode-in-java">http://stackoverflow.com/questions/27581/overriding-equals-and-hashcode-in-java</a>

@@ -30,7 +30,7 @@ import java.util.Set;
  * @see cscie97.asn4.ecommerce.authentication.Entitlement
  * @see cscie97.asn4.ecommerce.authentication.IAuthenticationServiceAPI
  */
-public abstract class Item {
+public abstract class Item implements IAuthenticationVisitable {
 
     /**
      * A unique string identifier for each authentication item; should be a GUID
@@ -99,6 +99,16 @@ public abstract class Item {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    /**
+     * Accepts a visitor object for the purposes of building up an inventory of items in the AuthenticationService.
+     *
+     * @param visitor  the visiting object used to build up the inventory
+     * @return  the string representation of the current object for inclusion in a printable inventory
+     */
+    public String acceptVisitor(IAuthenticationVisitor visitor) {
+        return visitor.visit(this);
     }
 
     /**

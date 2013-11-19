@@ -1,16 +1,19 @@
-package cscie97.asn4.ecommerce.exception;
+package cscie97.asn4.ecommerce.product;
 
 /**
- * Exception for problems that the {@link cscie97.asn4.ecommerce.csv.Importer} or
- * {@link cscie97.asn4.ecommerce.product.SearchEngine} may run into during typical operation such as importing
- * Countries, Devices, Content, or executing queries.
+ * Exception for problems that the {@link SearchEngine} may run into during typical
+ * query execution.
  *
  * @author David Killeffer &lt;rayden7@gmail.com&gt;
  * @version 1.0
- * @see cscie97.asn4.ecommerce.csv.Importer
- * @see cscie97.asn4.ecommerce.product.SearchEngine
+ * @see SearchEngine
  */
-public class ParseException extends Exception {
+public class QueryEngineException extends Exception {
+
+    /**
+     * The original query string that triggered the exception
+     */
+    private String query;
 
     /**
      * The string line where the original exception originated in the import file
@@ -20,7 +23,7 @@ public class ParseException extends Exception {
     /**
      * The line number of the import file that triggered the original exception
      */
-    private int lineIndexWhereFailed = 0;
+    private int lineIndexWhereFailed;
 
     /**
      * Name of the imported file that triggered the original exception
@@ -30,38 +33,44 @@ public class ParseException extends Exception {
     /**
      * The original exception that this class wraps with more specific information
      */
-    private Throwable originalCause = null;
-
+    private Throwable originalCause;
 
     /**
-     * Wraps a more generic exception that may have been thrown in the {@link cscie97.asn4.ecommerce.csv.Importer}
-     * or {@link cscie97.asn4.ecommerce.product.SearchEngine} classes.  Arguments contain more specific details about
+     * Wraps a more generic exception that may have been thrown in the
+     * {@link SearchEngine} class.  Arguments contain more specific details about
      * the exception to simplify debugging.
      *
-     * @param line      the string value of the line that caused the exception
-     * @param cause     the wrapped lower-level exception that triggered this exception's creation; may be null
+     * @param msg       the exception message from the throwing cause
+     * @param query     the string value of the line that caused the exception
+     * @param lineNum   the line number in the file that caused the exception
+     * @param filename  the filename that was the cause of the original exception
+     * @param cause     the wrapped lower-level exception that triggered this exception's creation
      */
-    public ParseException (String msg, String line, Throwable cause) {
-        super("ParseException occurred on line [" + line + "]", cause);
-        this.lineWhereFailed = line;
+    public QueryEngineException (String msg, String query, int lineNum, String filename, Throwable cause) {
+        super("QueryEngineException occurred on query [" + query + "] of query file " + filename + " in line number [" + lineNum + "]", cause);
+
+        this.query = query;
+        this.lineIndexWhereFailed = lineNum;
+        this.filename = filename;
         this.originalCause = cause;
     }
 
     /**
-     * Wraps a more generic exception that may have been thrown in the {@link cscie97.asn4.ecommerce.csv.Importer}
-     * or {@link cscie97.asn4.ecommerce.product.SearchEngine} classes.  Arguments contain more specific details about
-     * the exception to simplify debugging.
+     * Returns the original string query that triggered the exception
      *
-     * @param msg       the exception message from the throwing cause
-     * @param line      the string value of the line that caused the exception
-     * @param cause     the wrapped lower-level exception that triggered this exception's creation; may be null
+     * @return   string query that triggered the exception
      */
-    public ParseException (String msg, String line, int lineNum, String filename, Throwable cause) {
-        super("ParseException occurred on line [" + line + "] of file [" + filename + "] at line number [" + lineNum + "]", cause);
-        this.lineWhereFailed = line;
-        this.lineIndexWhereFailed = lineNum;
-        this.filename = filename;
-        this.originalCause = cause;
+    public String getQuery() {
+        return query;
+    }
+
+    /**
+     * Sets the original string query that triggered the exception
+     *
+     * @param  query   string query that triggered the exception
+     */
+    public void setQuery(String query) {
+        this.query = query;
     }
 
     /**

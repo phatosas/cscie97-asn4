@@ -1,7 +1,5 @@
 package cscie97.asn4.ecommerce.authentication;
 
-import cscie97.asn4.ecommerce.exception.AccessDeniedException;
-
 import java.util.*;
 
 /**
@@ -53,18 +51,9 @@ public class AuthenticationServiceAPI implements IAuthenticationServiceAPI {
     private void createSuperUser() {
         if (this.superUser == null) {
             // create a hard-coded special "Super User" so that we can use that super user to import the Authentication data
-            String superUserGUID = UUID.randomUUID().toString();
-
-            this.superUser = new User(superUserGUID, SUPER_ADMINISTRATOR_USERNAME, "Administrative Super User");
-
-            Credentials credential = new Credentials(SUPER_ADMINISTRATOR_USERNAME, SUPER_ADMINISTRATOR_PASSWORD);
-            superUser.addCredential(credential);
-
-            /// create new AccessToken for super user
+            this.superUser = new User(UUID.randomUUID().toString(), SUPER_ADMINISTRATOR_USERNAME, "Administrative Super User");
+            superUser.addCredential( new Credentials(SUPER_ADMINISTRATOR_USERNAME, SUPER_ADMINISTRATOR_PASSWORD) );
             superUser.setAccessToken( new AccessToken(superUser.getID()) );
-
-
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             // define primary Authentication Service
             String authServiceID = "authentication_service";
@@ -145,13 +134,6 @@ public class AuthenticationServiceAPI implements IAuthenticationServiceAPI {
     }
 
     @Override
-    public void addPermission(String tokenID, Permission permission) {
-        if (mayAccess(tokenID, PermissionType.DEFINE_PERMISSION)) {
-            this.entitlements.add(permission);
-        }
-    }
-
-    @Override
     public void addPermissionToService(String tokenID, String serviceID, Permission permission) {
         if (mayAccess(tokenID, PermissionType.DEFINE_PERMISSION)) {
             Service service = this.getServiceById(serviceID);
@@ -160,12 +142,6 @@ public class AuthenticationServiceAPI implements IAuthenticationServiceAPI {
                 this.entitlements.add(permission);
             }
         }
-    }
-
-    @Override
-    public void addPermissionToService(String tokenID, String serviceID, String permissionID) {
-        Permission permission = (Permission) this.getEntitlementById(permissionID);
-        this.addPermissionToService(tokenID, serviceID, permission);
     }
 
     @Override
@@ -205,26 +181,6 @@ public class AuthenticationServiceAPI implements IAuthenticationServiceAPI {
     }
 
     @Override
-    public void createService(String tokenID, String id, String name, String description) {
-        this.addService(tokenID, new Service(id,name,description) );
-    }
-
-    @Override
-    public void createPermission(String tokenID, String id, String name, String description) {
-        this.addPermission(tokenID, new Permission(id,name,description) );
-    }
-
-    @Override
-    public void createRole(String tokenID, String id, String name, String description) {
-        this.addRole(tokenID, new Role(id, name, description));
-    }
-
-    @Override
-    public void createUser(String tokenID, String id, String name) {
-        this.addUser(tokenID, new User(id, name, "User account for"+name));
-    }
-
-    @Override
     public AccessToken login(String username, String password) throws AccessDeniedException {
         User foundUser = getUserByUsername(username);
         if (foundUser != null) {
@@ -260,8 +216,7 @@ public class AuthenticationServiceAPI implements IAuthenticationServiceAPI {
             AccessToken foundToken = foundUser.getAccessToken();
             if (foundToken != null && !foundToken.getExpirationTime().after(new Date())) {
                 return false;
-            }
-            else {
+            } else {
                 return foundUser.hasPermission(permissionID);
             }
         }
@@ -285,19 +240,19 @@ public class AuthenticationServiceAPI implements IAuthenticationServiceAPI {
         inventory.append("Authentication Service API Inventory\n------------------------------------\n\n");
         inventory.append(String.format("There are [%d] registered Users.  They are:\n",numUsers));
         for (User u : users) {
-            inventory.append(av.visitUser(u));
+            inventory.append( u.acceptVisitor(av) );
         }
 
-        inventory.append("\n\n");
+        inventory.append("\n");
         inventory.append(String.format("There are [%d] defined Services.  They are:\n",numServices));
         for (Service s : services) {
-            inventory.append(av.visitService(s));
+            inventory.append( s.acceptVisitor(av) );
         }
 
-        inventory.append("\n\n");
+        inventory.append("\n");
         inventory.append(String.format("There are [%d] defined Entitlements (Roles or Permissions).  They are:\n",numEntitlements));
         for (Entitlement e : entitlements) {
-            inventory.append(av.visitEntitlement(e));
+            inventory.append( e.acceptVisitor(av) );
         }
 
         return inventory.toString();

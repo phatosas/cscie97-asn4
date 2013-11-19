@@ -78,13 +78,13 @@ public class ContentSearch {
 
     /**
      * Public class constructor with no arguments.  The no-arg constructor is used for building out new ContentSearch
-     * objects that get modified as the {@link cscie97.asn4.ecommerce.csv.SearchEngine} loops over a CSV query
+     * objects that get modified as the {@link SearchEngine} loops over a CSV query
      * import file and constructs new ContentSearch objects for each unique search.
      */
     public ContentSearch() { }
 
     /**
-     * Class constructor.  ContentSearch objects are created by the {@link cscie97.asn4.ecommerce.csv.SearchEngine}
+     * Class constructor.  ContentSearch objects are created by the {@link SearchEngine}
      * to capture the search criteria that is from the input CSV files, and then the ContentSearch objects are passed
      * to the Singleton instance of the {@link cscie97.asn4.ecommerce.product.ProductAPI} for executing the actual
      * content search.

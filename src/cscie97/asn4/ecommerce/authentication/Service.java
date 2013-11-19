@@ -14,7 +14,7 @@ import java.util.Set;
  * Time: 10:55 AM
  * To change this template use File | Settings | File Templates.
  */
-public class Service extends Item {
+public class Service extends Item implements IAuthenticationVisitable {
 
     private Set<Permission> permissions = new HashSet<Permission>();
 
@@ -50,18 +50,26 @@ public class Service extends Item {
         this.permissions.addAll(permissions);
     }
 
-    public String acceptVisitor(AuthenticationVisitor visitor) {
-        return String.format("ID: %s, NAME: %s, DESCRIPTION: %s", this.getID(), this.getName(), this.getDescription());
+    /**
+     * Accepts a visitor object for the purposes of building up an inventory of items in the AuthenticationService.
+     *
+     * @param visitor  the visiting object used to build up the inventory
+     * @return  the string representation of the current object for inclusion in a printable inventory
+     */
+    public String acceptVisitor(IAuthenticationVisitor visitor) {
+        return visitor.visitService(this);
     }
 
+
     /**
-     * Since {@link cscie97.asn4.ecommerce.product.Content} objects may be added to collections, and also since
-     * the {@link cscie97.asn4.ecommerce.product.IProductAPI} enforces that all content items be unique, this method
-     * provides a way to determine if another {@link cscie97.asn4.ecommerce.product.Content} item is the same as the
-     * current one.  Uses the Apache Commons {@link org.apache.commons.lang3.builder.EqualsBuilder} to determine if
+     * Since {@link cscie97.asn4.ecommerce.authentication.Service} objects may be added to collections, and also
+     * since the {@link cscie97.asn4.ecommerce.authentication.IAuthenticationServiceAPI} enforces that all entitlement
+     * items be unique, this method provides a way to determine if another
+     * {@link cscie97.asn4.ecommerce.authentication.Service} item is the same as the current one based on shared
+     * properties.  Uses the Apache Commons {@link org.apache.commons.lang3.builder.EqualsBuilder} to determine if
      * the two objects are indeed equal to each other.
      *
-     * @param compare  the {@link cscie97.asn4.ecommerce.product.Content} item to compare to the current object to test for equality
+     * @param compare  the item to compare to the current object to test for equality
      * @return  true if the objects are the same, false otherwise
      * @see <a href="http://stackoverflow.com/questions/27581/overriding-equals-and-hashcode-in-java">http://stackoverflow.com/questions/27581/overriding-equals-and-hashcode-in-java</a>
      * @see <a href="http://www.java-tutorial.ch/core-java-tutorial/equalsbuilder">http://www.java-tutorial.ch/core-java-tutorial/equalsbuilder</a>

@@ -14,7 +14,7 @@ import java.util.*;
  * Time: 10:57 AM
  * To change this template use File | Settings | File Templates.
  */
-public class User extends Item {
+public class User extends Item implements IAuthenticationVisitable {
 
     private Set<Credentials> credentials = new HashSet<Credentials>();
 
@@ -123,13 +123,14 @@ public class User extends Item {
     }
 
     /**
-     * Since {@link cscie97.asn4.ecommerce.product.Content} objects may be added to collections, and also since
-     * the {@link cscie97.asn4.ecommerce.product.IProductAPI} enforces that all content items be unique, this method
-     * provides a way to determine if another {@link cscie97.asn4.ecommerce.product.Content} item is the same as the
-     * current one.  Uses the Apache Commons {@link org.apache.commons.lang3.builder.EqualsBuilder} to determine if
+     * Since {@link cscie97.asn4.ecommerce.authentication.User} objects may be added to collections, and also
+     * since the {@link cscie97.asn4.ecommerce.authentication.IAuthenticationServiceAPI} enforces that all entitlement
+     * items be unique, this method provides a way to determine if another
+     * {@link cscie97.asn4.ecommerce.authentication.User} item is the same as the current one based on shared
+     * properties.  Uses the Apache Commons {@link org.apache.commons.lang3.builder.EqualsBuilder} to determine if
      * the two objects are indeed equal to each other.
      *
-     * @param compare  the {@link cscie97.asn4.ecommerce.product.Content} item to compare to the current object to test for equality
+     * @param compare  the item to compare to the current object to test for equality
      * @return  true if the objects are the same, false otherwise
      * @see <a href="http://stackoverflow.com/questions/27581/overriding-equals-and-hashcode-in-java">http://stackoverflow.com/questions/27581/overriding-equals-and-hashcode-in-java</a>
      * @see <a href="http://www.java-tutorial.ch/core-java-tutorial/equalsbuilder">http://www.java-tutorial.ch/core-java-tutorial/equalsbuilder</a>

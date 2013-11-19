@@ -10,7 +10,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * Time: 10:55 AM
  * To change this template use File | Settings | File Templates.
  */
-public class Permission extends Entitlement {
+public class Permission extends Entitlement implements IAuthenticationVisitable {
 
     public Permission() { }
 
@@ -22,6 +22,15 @@ public class Permission extends Entitlement {
         this(permissionType.getPermissionName(), name, description);
     }
 
+    /**
+     * Accepts a visitor object for the purposes of building up an inventory of items in the AuthenticationService.
+     *
+     * @param visitor  the visiting object used to build up the inventory
+     * @return  the string representation of the current object for inclusion in a printable inventory
+     */
+    public String acceptVisitor(IAuthenticationVisitor visitor) {
+        return visitor.visit(this);
+    }
 
     /**
      * Since {@link cscie97.asn4.ecommerce.product.Content} objects may be added to collections, and also since

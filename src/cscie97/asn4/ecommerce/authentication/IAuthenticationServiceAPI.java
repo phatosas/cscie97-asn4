@@ -1,7 +1,5 @@
 package cscie97.asn4.ecommerce.authentication;
 
-import cscie97.asn4.ecommerce.exception.AccessDeniedException;
-
 /**
  * Created with IntelliJ IDEA.
  * User: dkilleffer
@@ -17,9 +15,7 @@ public interface IAuthenticationServiceAPI {
 
     public void addRole(String tokenID, Role role);
 
-    public void addPermission(String tokenID, Permission permission);
-
-    public void addPermissionToService(String tokenID, String serviceID, String permissionID);
+    //public void addPermission(String tokenID, Permission permission);
 
     public void addPermissionToService(String tokenID, String serviceID, Permission permission);
 
@@ -28,14 +24,6 @@ public interface IAuthenticationServiceAPI {
     public void addCredentialToUser(String tokenID, String userID, String username, String password);
 
     public void addEntitlementToUser(String tokenID, String userID, String entitlementID);
-
-    public void createService(String tokenID, String id, String name, String description);
-
-    public void createPermission(String tokenID, String id, String name, String description);
-
-    public void createRole(String tokenID, String id, String name, String description);
-
-    public void createUser(String tokenID, String id, String name);
 
     public AccessToken login(String username, String password) throws AccessDeniedException;
 

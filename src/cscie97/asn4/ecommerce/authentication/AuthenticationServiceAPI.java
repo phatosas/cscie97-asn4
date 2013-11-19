@@ -327,6 +327,7 @@ public class AuthenticationServiceAPI implements IAuthenticationServiceAPI {
      * @param permissionType  the PermissionType to check the user for
      * @return true if the user has the Permission, false otherwise
      */
+    @Override
     public boolean mayAccess(String tokenID, PermissionType permissionType) {
         return mayAccess(tokenID, permissionType.getPermissionName());
     }

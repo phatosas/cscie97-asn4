@@ -13,7 +13,6 @@ public class AuthenticationVisitor {
         String id = item.getID();
         String name = item.getName();
         String description = item.getDescription();
-        //return String.format("ID: [%s] Name: [%s] Description: [%s]", id, name, description);
         return String.format("ID: [%s] Name: [%s]", id, name);
     }
 

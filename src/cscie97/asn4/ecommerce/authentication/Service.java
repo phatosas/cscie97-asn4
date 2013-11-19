@@ -2,20 +2,24 @@ package cscie97.asn4.ecommerce.authentication;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
- * Created with IntelliJ IDEA.
- * User: dkilleffer
- * Date: 11/13/13
- * Time: 10:55 AM
- * To change this template use File | Settings | File Templates.
+ * Services represent the major functional areas of the Mobile Application Store, which currently includes the
+ * AuthenticationServiceAPI, CollectionServiceAPI, and ProductAPI.  Primarily marker classes for logical groupings of
+ * child {@link cscie97.asn4.ecommerce.authentication.Permission}s, Services don't currently exhibit much behavior.
+ *
+ * @author David Killeffer &lt;rayden7@gmail.com&gt;
+ * @version 1.0
+ * @see cscie97.asn4.ecommerce.authentication.Permission
+ * @see cscie97.asn4.ecommerce.authentication.IAuthenticationServiceAPI
  */
 public class Service extends Item implements IAuthenticationVisitable {
 
+    /**
+     * Child {@link cscie97.asn4.ecommerce.authentication.Permission} objects of the Service
+     */
     private Set<Permission> permissions = new HashSet<Permission>();
 
     /**
@@ -25,27 +29,49 @@ public class Service extends Item implements IAuthenticationVisitable {
      * @param name                the authentication service name
      * @param description         authentication service description
      */
-    public Service(String id, String name, String description)
-    {
+    public Service(String id, String name, String description) {
         this.setID(id);
         this.setName(name);
         this.setDescription(description);
     }
 
+    /**
+     * No-argument class constructor.
+     */
     public Service() { }
 
+    /**
+     * Gets the child permissions of the Service
+     *
+     * @return the set of Permissions of the Service
+     */
     public Set<Permission> getPermissions() {
         return permissions;
     }
 
+    /**
+     * Sets the child permissions of the Service
+     *
+     * @param permissions  the set of Permissions of the Service
+     */
     public void setPermissions(Set<Permission> permissions) {
         this.permissions = permissions;
     }
 
+    /**
+     * Adds a single Permission to the Service
+     *
+     * @param permission  a new Permission to add to the Service
+     */
     public void addPermission(Permission permission) {
         this.permissions.add(permission);
     }
 
+    /**
+     * Adds a set of Permissions to the Service
+     *
+     * @param permissions  a new set of additional Permissions to add to the Service
+     */
     public void addPermissions(Set<Permission> permissions) {
         this.permissions.addAll(permissions);
     }
@@ -59,7 +85,6 @@ public class Service extends Item implements IAuthenticationVisitable {
     public String acceptVisitor(IAuthenticationVisitor visitor) {
         return visitor.visitService(this);
     }
-
 
     /**
      * Since {@link cscie97.asn4.ecommerce.authentication.Service} objects may be added to collections, and also
@@ -93,11 +118,11 @@ public class Service extends Item implements IAuthenticationVisitable {
     }
 
     /**
-     * Since {@link cscie97.asn4.ecommerce.product.Content} objects may be added to collections, and also since
-     * the {@link cscie97.asn4.ecommerce.product.IProductAPI} enforces that all content items be unique, this method
-     * provides a way to get the unique hash code for the current content item.  Uses the Apache Commons
-     * {@link org.apache.commons.lang3.builder.HashCodeBuilder} to generate a unique hash code for the current item
-     * based on two randomly chosen unique prime numbers and all the object properties.
+     * Since {@link cscie97.asn4.ecommerce.authentication.Service} objects may be added to collections, and also since
+     * the {@link cscie97.asn4.ecommerce.authentication.IAuthenticationServiceAPI} enforces that all service items be
+     * unique, this method provides a way to get the unique hash code for the current service item.  Uses the Apache
+     * Commons {@link org.apache.commons.lang3.builder.HashCodeBuilder} to generate a unique hash code for the current
+     * item based on two randomly chosen unique prime numbers and all the object properties.
      *
      * @return  a unique integer hash code for this particular object
      * @see <a href="http://stackoverflow.com/questions/27581/overriding-equals-and-hashcode-in-java">http://stackoverflow.com/questions/27581/overriding-equals-and-hashcode-in-java</a>

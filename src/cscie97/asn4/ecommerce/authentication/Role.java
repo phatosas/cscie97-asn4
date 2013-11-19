@@ -9,14 +9,23 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Created with IntelliJ IDEA.
- * User: dkilleffer
- * Date: 11/13/13
- * Time: 10:55 AM
- * To change this template use File | Settings | File Templates.
+ * Roles represent aggregations of {@link cscie97.asn4.ecommerce.authentication.Permission}s and other
+ * {@link cscie97.asn4.ecommerce.authentication.Role}s.  A Role defines "who a user is"; for example, a role called
+ * "authentication_admin_role" would contain all the {@link cscie97.asn4.ecommerce.authentication.Permission}s that
+ * collectively define all the restricted actions that only an AuthenticationServiceAPI administrator could perform.
+ *
+ * @author David Killeffer &lt;rayden7@gmail.com&gt;
+ * @version 1.0
+ * @see cscie97.asn4.ecommerce.authentication.Entitlement
+ * @see cscie97.asn4.ecommerce.authentication.Role
+ * @see cscie97.asn4.ecommerce.authentication.Permission
+ * @see cscie97.asn4.ecommerce.authentication.User
  */
 public class Role extends Entitlement implements IAuthenticationVisitable {
 
+    /**
+     * Defines the iterator for the current role
+     */
     private RoleIterator iterator = null;
 
     /**
@@ -32,28 +41,59 @@ public class Role extends Entitlement implements IAuthenticationVisitable {
         return this.iterator;
     }
 
+    /**
+     * Defines the child elements of the Role, which may be other Roles or Permissions.
+     */
     private List<Entitlement> children = new ArrayList<Entitlement>();
 
+    /**
+     * Class constructor.
+     *
+     * @param id           the id of the role
+     * @param name         the name of the role
+     * @param description  a brief description of the role
+     */
     public Role(String id, String name, String description) {
         super(id, name, description);
     }
 
-    public Role() {
+    /**
+     * No-argument class constructor.
+     */
+    public Role() { }
 
-    }
-
+    /**
+     * Gets the children Entitlements of the Role
+     *
+     * @return  the children Entitlements of the Role
+     */
     public List<Entitlement> getChildren() {
         return children;
     }
 
+    /**
+     * Sets the current children Entitlements of the Role
+     *
+     * @param children  the child Entitlements of the Role
+     */
     public void setChildren(List<Entitlement> children) {
         this.children = children;
     }
 
+    /**
+     * Adds a child Entitlement to the Role
+     *
+     * @param entitlement  the children Entitlement to add to the Role
+     */
     public void addChild(Entitlement entitlement) {
         this.children.add(entitlement);
     }
 
+    /**
+     * Adds multiple children Entitlements to the Role
+     *
+     * @param entitlements  the set of children Entitlements to add to the Role
+     */
     public void addChildren(Set<Entitlement> entitlements) {
         this.children.addAll(entitlements);
     }

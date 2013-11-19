@@ -2,8 +2,6 @@ package cscie97.asn4.ecommerce.authentication;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import java.util.Set;
-
 
 /**
  * Abstract class representing an authentication item (could be a {@link cscie97.asn4.ecommerce.authentication.Role},
@@ -16,7 +14,6 @@ import java.util.Set;
  *     <li>must have a <b>name</b></li>
  *     <li>must have a <b>description</b></li>
  * </ul>
- *
  * Certain specific types of Authentication items may have additional required attributes.  Each
  * {@link cscie97.asn4.ecommerce.authentication.Item} that lives in the Authentication catalog is a unique item.
  * Authentication items may be added to the authentication catalog and made returnable by calling

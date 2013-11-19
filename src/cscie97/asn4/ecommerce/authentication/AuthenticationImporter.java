@@ -49,7 +49,7 @@ public class AuthenticationImporter extends Importer {
         // ensure that we have at least 4 elements passed and that the first element is "define_collection"
         if (authenticationData == null ||
             authenticationData.length != 4 ||
-            !authenticationData[0].trim().equalsIgnoreCase("define_service")
+            !authenticationData[0].trim().equalsIgnoreCase(PermissionType.DEFINE_SERVICE.getPermissionName())
         ) {
             throw new ParseException("Import Authentication line contains invalid data when calling defineService(): "+ StringUtils.join(authenticationData, ","),
                     null,
@@ -88,8 +88,8 @@ public class AuthenticationImporter extends Importer {
         // ensure that we have at least 5 elements passed and that the first element is "define_permission"
         if (authenticationData == null ||
                 authenticationData.length != 5 ||
-                !authenticationData[0].trim().equalsIgnoreCase("define_permission")
-                ) {
+                !authenticationData[0].trim().equalsIgnoreCase(PermissionType.DEFINE_PERMISSION.getPermissionName())
+        ) {
             throw new ParseException("Import Authentication line contains invalid data when calling definePermission(): "+ StringUtils.join(authenticationData, ","),
                     null,
                     0,
@@ -128,8 +128,8 @@ public class AuthenticationImporter extends Importer {
         // ensure that we have exactly 4 elements passed and that the first element is "define_role"
         if (authenticationData == null ||
                 authenticationData.length != 4 ||
-                !authenticationData[0].trim().equalsIgnoreCase("define_role")
-                ) {
+                !authenticationData[0].trim().equalsIgnoreCase(PermissionType.DEFINE_ROLE.getPermissionName())
+        ) {
             throw new ParseException("Import Authentication line contains invalid data when calling defineRole(): "+ StringUtils.join(authenticationData, ","),
                     null,
                     0,
@@ -165,7 +165,7 @@ public class AuthenticationImporter extends Importer {
         // ensure that we have exactly 3 elements passed and that the first element is "create_user"
         if (authenticationData == null ||
                 authenticationData.length != 3 ||
-                !authenticationData[0].trim().equalsIgnoreCase("create_user")
+                !authenticationData[0].trim().equalsIgnoreCase(PermissionType.CREATE_USER.getPermissionName())
         ) {
             throw new ParseException("Import Authentication line contains invalid data when calling createUser(): "+ StringUtils.join(authenticationData, ","),
                     null,
@@ -199,7 +199,7 @@ public class AuthenticationImporter extends Importer {
         // ensure that we have exactly 3 elements passed and that the first element is "add_entitlement_to_role"
         if (authenticationData == null ||
                 authenticationData.length != 3 ||
-                !authenticationData[0].trim().equalsIgnoreCase("add_entitlement_to_role")
+                !authenticationData[0].trim().equalsIgnoreCase(PermissionType.ADD_ENTITLEMENT_TO_ROLE.getPermissionName())
         ) {
             throw new ParseException("Import Authentication line contains invalid data when calling addEntitlementToRole(): "+ StringUtils.join(authenticationData, ","),
                     null,
@@ -238,7 +238,7 @@ public class AuthenticationImporter extends Importer {
         // ensure that we have exactly 4 elements passed and that the first element is "add_credential"
         if (authenticationData == null ||
             authenticationData.length != 4 ||
-            !authenticationData[0].trim().equalsIgnoreCase("add_credential")
+            !authenticationData[0].trim().equalsIgnoreCase(PermissionType.ADD_CREDENTIAL_TO_USER.getPermissionName())
         ) {
             throw new ParseException("Import Authentication line contains invalid data when calling addCredential(): "+ StringUtils.join(authenticationData, ","),
                     null,
@@ -311,13 +311,13 @@ public class AuthenticationImporter extends Importer {
         // in order to run the import of the authentication.csv file, the User who owns the passed GUID AccessToken
         // must have ALL of the permissions on the Authentication Service API, which include:
         if (
-                authenticationAPI.mayAccess(guid, PermissionType.DEFINE_SERVICE) &&
-                authenticationAPI.mayAccess(guid, PermissionType.DEFINE_PERMISSION) &&
-                authenticationAPI.mayAccess(guid, PermissionType.DEFINE_ROLE) &&
-                authenticationAPI.mayAccess(guid, PermissionType.ADD_ENTITLEMENT_TO_ROLE) &&
-                authenticationAPI.mayAccess(guid, PermissionType.CREATE_USER) &&
-                authenticationAPI.mayAccess(guid, PermissionType.ADD_CREDENTIAL_TO_USER) &&
-                authenticationAPI.mayAccess(guid, PermissionType.ADD_ENTITLEMENT_TO_USER)
+               authenticationAPI.mayAccess(guid, PermissionType.DEFINE_SERVICE) &&
+               authenticationAPI.mayAccess(guid, PermissionType.DEFINE_PERMISSION) &&
+               authenticationAPI.mayAccess(guid, PermissionType.DEFINE_ROLE) &&
+               authenticationAPI.mayAccess(guid, PermissionType.CREATE_USER) &&
+               authenticationAPI.mayAccess(guid, PermissionType.ADD_ENTITLEMENT_TO_ROLE) &&
+               authenticationAPI.mayAccess(guid, PermissionType.ADD_CREDENTIAL_TO_USER) &&
+               authenticationAPI.mayAccess(guid, PermissionType.ADD_ENTITLEMENT_TO_USER)
         ) {
             int lineNumber = 0;  // keep track of what lineNumber we're reading in from the input file for exception handling
             String line;  // store the text on each line as it's processed

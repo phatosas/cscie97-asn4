@@ -1,41 +1,22 @@
 package cscie97.asn4.ecommerce.authentication;
 
-import cscie97.asn4.ecommerce.authentication.Entitlement;
-import cscie97.asn4.ecommerce.authentication.Role;
-import cscie97.asn4.ecommerce.authentication.Permission;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Stack;
 
-
 /**
- * Allows for the iteration of {@link cscie97.asn4.ecommerce.authentication.Role} items.
- * {@link cscie97.asn4.ecommerce.collection.Collectible}s follow a two-part Composite design pattern; at the
- * lowest level, Collectibles can be instances of either {@link cscie97.asn4.ecommerce.collection.StaticCollection} or
- * {@link cscie97.asn4.ecommerce.collection.DynamicCollection}, both of which inherit from
- * {@link cscie97.asn4.ecommerce.collection.Collection}.  These {@link cscie97.asn4.ecommerce.collection.StaticCollection}
- * and {@link cscie97.asn4.ecommerce.collection.DynamicCollection} objects may be iterated over using this
- * RoleIterator.  At a higher level, {@link cscie97.asn4.ecommerce.collection.Collectible}s may either be
- * {@link cscie97.asn4.ecommerce.collection.Collection} instances or
- * {@link cscie97.asn4.ecommerce.collection.ContentProxy} instances, and the two types share several common attributes.
- *
- * However, since {@link cscie97.asn4.ecommerce.collection.Collectible} objects may children of
- * {@link cscie97.asn4.ecommerce.collection.Collection}, they may have several children and at several layers of
- * depth, making this iterator necessary to traverse a Collection.  This iterator will traverse the Collectible
- * depth-first.
+ * Allows for the iteration of {@link cscie97.asn4.ecommerce.authentication.Role} items, which may contain child
+ * Roles or Permissions.  This iterator will traverse the Collectible depth-first.
  *
  * @author David Killeffer &lt;rayden7@gmail.com&gt;
  * @version 1.0
- * @see cscie97.asn4.ecommerce.collection.Collectible
- * @see cscie97.asn4.ecommerce.collection.ContentProxy
- * @see cscie97.asn4.ecommerce.collection.Collection
- * @see cscie97.asn4.ecommerce.collection.DynamicCollection
- * @see cscie97.asn4.ecommerce.collection.StaticCollection
+ * @see cscie97.asn4.ecommerce.authentication.Permission
+ * @see cscie97.asn4.ecommerce.authentication.Role
  */
 public class RoleIterator implements Iterator {
 
     /**
-     * Private stack is used to "flatten" the tree structure of the Collection and return items in depth-first order.
+     * Private stack is used to "flatten" the tree structure of the Role and return items in depth-first order.
      */
     private Stack<Entitlement> itemStack = new Stack<Entitlement>();
 
@@ -46,9 +27,9 @@ public class RoleIterator implements Iterator {
 
     /**
      * Class constructor.  Takes a reference to the "top" level of the
-     * {@link cscie97.asn4.ecommerce.collection.Collectible} to be iterated over.
+     * {@link cscie97.asn4.ecommerce.authentication.Role} to be iterated over.
      *
-     * @param top  the Collectible to iterate over
+     * @param top  the Role to iterate over
      */
     public RoleIterator(Role top) {
         this.itemStack.push(top);
@@ -57,10 +38,10 @@ public class RoleIterator implements Iterator {
 
     /**
      * Convenience method to get the current item without moving the internal pointer of the iterator (calling
-     * {@link CollectionIterator#next()} will move the hidden internal pointer, but this method does not have that
+     * {@link RoleIterator#next()} will move the hidden internal pointer, but this method does not have that
      * side-effect).
      *
-     * @return  the current item the iterator is positioned at; will return null if {@link CollectionIterator#next()}
+     * @return  the current item the iterator is positioned at; will return null if {@link RoleIterator#next()}
      *          has never been called
      */
     public Entitlement getCurrent() {
@@ -68,9 +49,9 @@ public class RoleIterator implements Iterator {
     }
 
     /**
-     * Traverse the Collectible and return the next item.
+     * Traverse the Role and return the next item.
      *
-     * @return  the next Collectible in the Collection
+     * @return  the next Entitlement in the Role
      */
     public Entitlement next() {
         if (!hasNext()) {

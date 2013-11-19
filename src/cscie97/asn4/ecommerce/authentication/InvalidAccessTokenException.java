@@ -3,24 +3,17 @@ package cscie97.asn4.ecommerce.authentication;
 import cscie97.asn4.ecommerce.exception.MobileAppException;
 
 /**
- * Exception for problems that the {@link cscie97.asn4.ecommerce.collection.CollectionImporter},
- * {@link cscie97.asn4.ecommerce.product.ContentImporter}, or {@link cscie97.asn4.ecommerce.product.SearchEngine} may run into
- * during typical operation.  This class will wrap lower-level exceptions (such as FileNotFoundException, IOException,
- * and generic Exception).
+ * Exception for problems that the {@link cscie97.asn4.ecommerce.authentication.IAuthenticationServiceAPI}, may run into
+ * during typical operation.
  *
  * @author David Killeffer &lt;rayden7@gmail.com&gt;
  * @version 1.0
- * @see cscie97.asn4.ecommerce.collection.CollectionImporter
- * @see cscie97.asn4.ecommerce.product.ContentImporter
- * @see cscie97.asn4.ecommerce.product.SearchEngine
+ * @see cscie97.asn4.ecommerce.authentication.IAuthenticationServiceAPI
  */
 public class InvalidAccessTokenException extends MobileAppException {
 
     /**
-     * Wraps a more generic exception that may have been thrown in either the
-     * {@link cscie97.asn4.ecommerce.collection.CollectionImporter}, {@link cscie97.asn4.ecommerce.product.ContentImporter}, or
-     * {@link cscie97.asn4.ecommerce.product.SearchEngine} classes.  Arguments contain more specific details about the
-     * exception to simplify debugging.
+     * Thrown if an invalid AccessToken is attempted to be used to authenticate with.
      *
      * @param line      the string value of the line that caused the exception
      * @param lineNum   the line number in the file that caused the exception

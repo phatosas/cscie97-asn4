@@ -10,6 +10,8 @@ import java.util.UUID;
  * methods on either the {@link cscie97.asn4.ecommerce.product.IProductAPI} or
  * {@link cscie97.asn4.ecommerce.collection.ICollectionServiceAPI} must pass the
  * {@link cscie97.asn4.ecommerce.authentication.AccessToken#id} of the user's AccessToken in order to proceed.
+ * AccessTokens have a 1 hour default timeout, but successive calls to restricted interface methods on any of the
+ * supported APIs will increment this expiration time.
  *
  * @author David Killeffer &lt;rayden7@gmail.com&gt;
  * @version 1.0

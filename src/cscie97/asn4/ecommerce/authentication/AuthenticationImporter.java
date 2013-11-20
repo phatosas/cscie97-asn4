@@ -32,278 +32,16 @@ import java.io.IOException;
 public class AuthenticationImporter extends Importer {
 
     /**
-     * Creates services and adds them to the {@link cscie97.asn4.ecommerce.authentication.AuthenticationServiceAPI}.
-     * The format of each element in authenticationData should be:
-     * <ol>
-     *     <li><b>define_service</b></li>
-     *     <li>service ID</li>
-     *     <li>service name</li>
-     *     <li>service description</li>
-     * </ol>
-     *
-     * @param guid                   access token for carrying out restricted interface actions such as this
-     * @param authenticationData     string array of lines (each line is part of a CSV file) to be parsed and loaded as a new Authentication Service
-     * @throws cscie97.asn4.ecommerce.exception.ParseException    if an error occurred parsing the authenticationData
-     */
-    private static void defineService(String guid, String[] authenticationData) throws ParseException {
-        // ensure that we have at least 4 elements passed and that the first element is "define_collection"
-        if (authenticationData == null ||
-            authenticationData.length != 4 ||
-            !authenticationData[0].trim().equalsIgnoreCase(PermissionType.DEFINE_SERVICE.getPermissionName())
-        ) {
-            throw new ParseException("Import Authentication line contains invalid data when calling defineService(): "+ StringUtils.join(authenticationData, ","),
-                    null,
-                    0,
-                    null,
-                    null);
-        }
-
-        Service service = new Service();
-        service.setID(authenticationData[1].trim());
-        service.setName(authenticationData[2].trim());
-        service.setDescription(authenticationData[3].trim());
-
-        IAuthenticationServiceAPI authenticationAPI = AuthenticationServiceAPI.getInstance();
-        authenticationAPI.addService(guid, service);
-
-        System.out.println(String.format("Adding Service to AuthenticationService catalog: [%s]\n", service));
-    }
-
-    /**
-     * Creates permissions and adds them to the {@link cscie97.asn4.ecommerce.authentication.AuthenticationServiceAPI}.
-     * The format of each element in authenticationData should be:
-     * <ol>
-     *     <li><b>define_permission</b></li>
-     *     <li>service ID</li>
-     *     <li>permission id</li>
-     *     <li>permission name</li>
-     *     <li>service description</li>
-     * </ol>
-     *
-     * @param guid                   access token for carrying out restricted interface actions such as this
-     * @param authenticationData     string array of lines (each line is part of a CSV file) to be parsed and loaded as a new Authentication Permission
-     * @throws cscie97.asn4.ecommerce.exception.ParseException    if an error occurred parsing the authenticationData
-     */
-    private static void definePermission(String guid, String[] authenticationData) throws ParseException {
-        // ensure that we have at least 5 elements passed and that the first element is "define_permission"
-        if (authenticationData == null ||
-                authenticationData.length != 5 ||
-                !authenticationData[0].trim().equalsIgnoreCase(PermissionType.DEFINE_PERMISSION.getPermissionName())
-        ) {
-            throw new ParseException("Import Authentication line contains invalid data when calling definePermission(): "+ StringUtils.join(authenticationData, ","),
-                    null,
-                    0,
-                    null,
-                    null);
-        }
-
-        Permission permission = new Permission();
-        permission.setID(authenticationData[2].trim());
-        permission.setName(authenticationData[3].trim());
-        permission.setDescription(authenticationData[4].trim());
-
-        String serviceID = authenticationData[1].trim();
-
-        IAuthenticationServiceAPI authenticationAPI = AuthenticationServiceAPI.getInstance();
-        authenticationAPI.addPermissionToService(guid, serviceID, permission);
-
-        System.out.println(String.format("Adding Permission on ServiceID [%s] to AuthenticationService catalog: [%s]\n", serviceID, permission));
-    }
-
-    /**
-     * Creates roles and adds them to the {@link cscie97.asn4.ecommerce.authentication.AuthenticationServiceAPI}.
-     * The format of each element in authenticationData should be:
-     * <ol>
-     *     <li><b>define_role</b></li>
-     *     <li>role id</li>
-     *     <li>role name</li>
-     *     <li>role description</li>
-     * </ol>
-     *
-     * @param guid                   access token for carrying out restricted interface actions such as this
-     * @param authenticationData     string array of lines (each line is part of a CSV file) to be parsed and loaded as a new Authentication Permission
-     * @throws cscie97.asn4.ecommerce.exception.ParseException    if an error occurred parsing the authenticationData
-     */
-    private static void defineRole(String guid, String[] authenticationData) throws ParseException {
-        // ensure that we have exactly 4 elements passed and that the first element is "define_role"
-        if (authenticationData == null ||
-                authenticationData.length != 4 ||
-                !authenticationData[0].trim().equalsIgnoreCase(PermissionType.DEFINE_ROLE.getPermissionName())
-        ) {
-            throw new ParseException("Import Authentication line contains invalid data when calling defineRole(): "+ StringUtils.join(authenticationData, ","),
-                    null,
-                    0,
-                    null,
-                    null);
-        }
-
-        Role role = new Role();
-        role.setID(authenticationData[1].trim());
-        role.setName(authenticationData[2].trim());
-        role.setDescription(authenticationData[3].trim());
-
-        IAuthenticationServiceAPI authenticationAPI = AuthenticationServiceAPI.getInstance();
-        authenticationAPI.addRole(guid, role);
-
-        System.out.println(String.format("Adding Role to AuthenticationService catalog: [%s]\n", role));
-    }
-
-    /**
-     * Creates registered users and adds them to the {@link cscie97.asn4.ecommerce.authentication.AuthenticationServiceAPI}.
-     * The format of each element in authenticationData should be:
-     * <ol>
-     *     <li><b>create_user</b></li>
-     *     <li>user id</li>
-     *     <li>user name</li>
-     * </ol>
-     *
-     * @param guid                   access token for carrying out restricted interface actions such as this
-     * @param authenticationData     string array of lines (each line is part of a CSV file) to be parsed and loaded as a new Authentication Service registered User
-     * @throws cscie97.asn4.ecommerce.exception.ParseException    if an error occurred parsing the authenticationData
-     */
-    private static void createUser(String guid, String[] authenticationData) throws ParseException {
-        // ensure that we have exactly 3 elements passed and that the first element is "create_user"
-        if (authenticationData == null ||
-                authenticationData.length != 3 ||
-                !authenticationData[0].trim().equalsIgnoreCase(PermissionType.CREATE_USER.getPermissionName())
-        ) {
-            throw new ParseException("Import Authentication line contains invalid data when calling createUser(): "+ StringUtils.join(authenticationData, ","),
-                    null,
-                    0,
-                    null,
-                    null);
-        }
-
-        User user = new User(authenticationData[1].trim(),authenticationData[2].trim());
-
-        IAuthenticationServiceAPI authenticationAPI = AuthenticationServiceAPI.getInstance();
-        authenticationAPI.addUser(guid, user);
-
-        System.out.println(String.format("Adding User to AuthenticationService catalog: [%s]\n", user));
-    }
-
-    /**
-     * Adds Entitlements (which may be actually either Roles or Permissions) to Roles.  The format of each element
-     * in authenticationData should be:
-     * <ol>
-     *     <li><b>add_entitlement_to_role</b></li>
-     *     <li>role id</li>
-     *     <li>entitlement id</li>
-     * </ol>
-     *
-     * @param guid                   access token for carrying out restricted interface actions such as this
-     * @param authenticationData     string array of lines (each line is part of a CSV file) to be parsed and loaded as a new Authentication Service registered User
-     * @throws cscie97.asn4.ecommerce.exception.ParseException    if an error occurred parsing the authenticationData
-     */
-    private static void addEntitlementToRole(String guid, String[] authenticationData) throws ParseException {
-        // ensure that we have exactly 3 elements passed and that the first element is "add_entitlement_to_role"
-        if (authenticationData == null ||
-                authenticationData.length != 3 ||
-                !authenticationData[0].trim().equalsIgnoreCase(PermissionType.ADD_ENTITLEMENT_TO_ROLE.getPermissionName())
-        ) {
-            throw new ParseException("Import Authentication line contains invalid data when calling addEntitlementToRole(): "+ StringUtils.join(authenticationData, ","),
-                    null,
-                    0,
-                    null,
-                    null);
-        }
-
-        String roleID = authenticationData[1].trim();
-        String entitlementID = authenticationData[2].trim();
-
-        IAuthenticationServiceAPI authenticationAPI = AuthenticationServiceAPI.getInstance();
-        authenticationAPI.addPermissionToRole(guid, roleID, entitlementID);
-
-        System.out.println(String.format("Adding Entitlement ID [%s] to Role ID [%s]\n", roleID, entitlementID));
-    }
-
-    /**
-     * Adds Credentials to users, which are comprised of a username and password (hashed).  Users can have multiple
-     * sets of Credentials, which will allow them to login to the AuthenticationService with different usernames
-     * and password.
-     *
-     * The format of each element in authenticationData should be:
-     * <ol>
-     *     <li><b>add_credential</b></li>
-     *     <li>user id</li>
-     *     <li>username</li>
-     *     <li>password</li>
-     * </ol>
-     *
-     * @param guid                   access token for carrying out restricted interface actions such as this
-     * @param authenticationData     string array of lines (each line is part of a CSV file) to be parsed and loaded as a new Authentication Service registered User
-     * @throws cscie97.asn4.ecommerce.exception.ParseException    if an error occurred parsing the authenticationData
-     */
-    private static void addCredentialToUser(String guid, String[] authenticationData) throws ParseException {
-        // ensure that we have exactly 4 elements passed and that the first element is "add_credential"
-        if (authenticationData == null ||
-            authenticationData.length != 4 ||
-            !authenticationData[0].trim().equalsIgnoreCase(PermissionType.ADD_CREDENTIAL_TO_USER.getPermissionName())
-        ) {
-            throw new ParseException("Import Authentication line contains invalid data when calling addCredential(): "+ StringUtils.join(authenticationData, ","),
-                    null,
-                    0,
-                    null,
-                    null);
-        }
-
-        String userID = authenticationData[1].trim();
-        String username = authenticationData[2].trim();
-        String password = authenticationData[3].trim();
-
-        IAuthenticationServiceAPI authenticationAPI = AuthenticationServiceAPI.getInstance();
-        authenticationAPI.addCredentialToUser(guid, userID, username, password);
-
-        System.out.println(String.format("Adding Credentials username [%s] password [%s] to User ID [%s]\n", username, password, userID));
-    }
-
-    /**
-     * Adds Entitlements to users, which can be either a Permission or Role.
-     *
-     * The format of each element in authenticationData should be:
-     * <ol>
-     *     <li><b>add_entitlement_to_user</b></li>
-     *     <li>user id</li>
-     *     <li>entitlement id</li>
-     * </ol>
-     *
-     * @param guid                   access token for carrying out restricted interface actions such as this
-     * @param authenticationData     string array of lines (each line is part of a CSV file) to be parsed and loaded as a new Authentication Service registered User
-     * @throws cscie97.asn4.ecommerce.exception.ParseException    if an error occurred parsing the authenticationData
-     */
-    private static void addEntitlementToUser(String guid, String[] authenticationData) throws ParseException {
-        // ensure that we have exactly 4 elements passed and that the first element is "add_credential"
-        if (authenticationData == null ||
-            authenticationData.length != 3 ||
-            !authenticationData[0].trim().equalsIgnoreCase(PermissionType.ADD_ENTITLEMENT_TO_USER.getPermissionName())
-        ) {
-            throw new ParseException("Import Authentication line contains invalid data when calling addEntitlementToUser(): "+ StringUtils.join(authenticationData, ","),
-                    null,
-                    0,
-                    null,
-                    null);
-        }
-
-        String userID = authenticationData[1].trim();
-        String entitlementID  = authenticationData[2].trim();
-
-        IAuthenticationServiceAPI authenticationAPI = AuthenticationServiceAPI.getInstance();
-        authenticationAPI.addEntitlementToUser(guid, userID, entitlementID);
-
-        System.out.println(String.format("Adding Entitlement ID [%s] to User ID [%s]\n", entitlementID, userID));
-    }
-
-    /**
      * Public method for importing Authentication items into the Authentication Service catalog, including Services,
      * Roles, Permissions, and Users, and setting all appropriate attributes on those objects.
      *
-     * @param guid                    access token for carrying out restricted interface actions such as this
+     * @param tokenID                    access token for carrying out restricted interface actions such as this
      * @param filename                file with authentication items to load into the authentication catalog
      * @throws ImportException        thrown when encountering non-parse related exceptions in the import process
      * @throws ParseException         thrown when encountering any issues parsing the input file related to the format of the file contents
      * @throws AccessDeniedException  thrown when encountering any permission-related issues calling the restricted methods of the IAuthenticationServiceAPI
      */
-    public static void importAuthenticationFile(String guid, String filename)
+    public static void importAuthenticationFile(String tokenID, String filename)
             throws ImportException, ParseException, AccessDeniedException {
 
         IAuthenticationServiceAPI authenticationAPI = AuthenticationServiceAPI.getInstance();
@@ -311,14 +49,14 @@ public class AuthenticationImporter extends Importer {
         // in order to run the import of the authentication.csv file, the User who owns the passed GUID AccessToken
         // must have ALL of the permissions on the Authentication Service API, which include:
         if (
-               authenticationAPI.mayAccess(guid, PermissionType.DEFINE_SERVICE) &&
-               authenticationAPI.mayAccess(guid, PermissionType.DEFINE_PERMISSION) &&
-               authenticationAPI.mayAccess(guid, PermissionType.DEFINE_ROLE) &&
-               authenticationAPI.mayAccess(guid, PermissionType.CREATE_USER) &&
-               authenticationAPI.mayAccess(guid, PermissionType.ADD_ENTITLEMENT_TO_ROLE) &&
-               authenticationAPI.mayAccess(guid, PermissionType.ADD_CREDENTIAL_TO_USER) &&
-               authenticationAPI.mayAccess(guid, PermissionType.ADD_ENTITLEMENT_TO_USER)
-        ) {
+                authenticationAPI.mayAccess(tokenID, PermissionType.DEFINE_SERVICE) &&
+                        authenticationAPI.mayAccess(tokenID, PermissionType.DEFINE_PERMISSION) &&
+                        authenticationAPI.mayAccess(tokenID, PermissionType.DEFINE_ROLE) &&
+                        authenticationAPI.mayAccess(tokenID, PermissionType.CREATE_USER) &&
+                        authenticationAPI.mayAccess(tokenID, PermissionType.ADD_ENTITLEMENT_TO_ROLE) &&
+                        authenticationAPI.mayAccess(tokenID, PermissionType.ADD_CREDENTIAL_TO_USER) &&
+                        authenticationAPI.mayAccess(tokenID, PermissionType.ADD_ENTITLEMENT_TO_USER)
+                ) {
             int lineNumber = 0;  // keep track of what lineNumber we're reading in from the input file for exception handling
             String line;  // store the text on each line as it's processed
 
@@ -343,31 +81,31 @@ public class AuthenticationImporter extends Importer {
                         try {
                             // define service
                             if (cleanedColumns.length == 4 && cleanedColumns[0].equalsIgnoreCase("define_service")) {
-                                AuthenticationImporter.defineService(guid, cleanedColumns);
+                                AuthenticationImporter.defineService(tokenID, cleanedColumns);
                             }
                             // define permission
                             if (cleanedColumns.length == 5 && cleanedColumns[0].equalsIgnoreCase("define_permission")) {
-                                AuthenticationImporter.definePermission(guid, cleanedColumns);
+                                AuthenticationImporter.definePermission(tokenID, cleanedColumns);
                             }
                             // define role
                             if (cleanedColumns.length == 4 && cleanedColumns[0].equalsIgnoreCase("define_role")) {
-                                AuthenticationImporter.defineRole(guid, cleanedColumns);
+                                AuthenticationImporter.defineRole(tokenID, cleanedColumns);
                             }
                             // add entitlement to role
                             if (cleanedColumns.length == 3 && cleanedColumns[0].equalsIgnoreCase("add_entitlement_to_role")) {
-                                AuthenticationImporter.addEntitlementToRole(guid, cleanedColumns);
+                                AuthenticationImporter.addEntitlementToRole(tokenID, cleanedColumns);
                             }
                             // create user
                             if (cleanedColumns.length == 3 && cleanedColumns[0].equalsIgnoreCase("create_user")) {
-                                AuthenticationImporter.createUser(guid, cleanedColumns);
+                                AuthenticationImporter.createUser(tokenID, cleanedColumns);
                             }
                             // add credential
                             if (cleanedColumns.length == 4 && cleanedColumns[0].equalsIgnoreCase("add_credential")) {
-                                AuthenticationImporter.addCredentialToUser(guid, cleanedColumns);
+                                AuthenticationImporter.addCredentialToUser(tokenID, cleanedColumns);
                             }
                             // add entitlement to user
                             if (cleanedColumns.length == 3 && cleanedColumns[0].equalsIgnoreCase("add_entitlement_to_user")) {
-                                AuthenticationImporter.addEntitlementToUser(guid, cleanedColumns);
+                                AuthenticationImporter.addEntitlementToUser(tokenID, cleanedColumns);
                             }
                         }
                         catch (ParseException pe) {
@@ -400,7 +138,269 @@ public class AuthenticationImporter extends Importer {
 
         }
         // NOT ALLOWED!
-        else throw new AccessDeniedException(guid, "", 0, "", null);
+        else throw new AccessDeniedException(tokenID, "", 0, "", null);
+    }
+
+    /**
+     * Creates services and adds them to the {@link cscie97.asn4.ecommerce.authentication.AuthenticationServiceAPI}.
+     * The format of each element in authenticationData should be:
+     * <ol>
+     *     <li><b>define_service</b></li>
+     *     <li>service ID</li>
+     *     <li>service name</li>
+     *     <li>service description</li>
+     * </ol>
+     *
+     * @param tokenID                   access token for carrying out restricted interface actions such as this
+     * @param authenticationData     string array of lines (each line is part of a CSV file) to be parsed and loaded as a new Authentication Service
+     * @throws cscie97.asn4.ecommerce.exception.ParseException    if an error occurred parsing the authenticationData
+     */
+    private static void defineService(String tokenID, String[] authenticationData) throws ParseException {
+        // ensure that we have at least 4 elements passed and that the first element is "define_collection"
+        if (authenticationData == null ||
+            authenticationData.length != 4 ||
+            !authenticationData[0].trim().equalsIgnoreCase(PermissionType.DEFINE_SERVICE.getPermissionName())
+        ) {
+            throw new ParseException("Import Authentication line contains invalid data when calling defineService(): "+ StringUtils.join(authenticationData, ","),
+                    null,
+                    0,
+                    null,
+                    null);
+        }
+
+        Service service = new Service();
+        service.setID(authenticationData[1].trim());
+        service.setName(authenticationData[2].trim());
+        service.setDescription(authenticationData[3].trim());
+
+        IAuthenticationServiceAPI authenticationAPI = AuthenticationServiceAPI.getInstance();
+        authenticationAPI.addService(tokenID, service);
+
+        System.out.println(String.format("Adding Service to AuthenticationService catalog: [%s]\n", service));
+    }
+
+    /**
+     * Creates permissions and adds them to the {@link cscie97.asn4.ecommerce.authentication.AuthenticationServiceAPI}.
+     * The format of each element in authenticationData should be:
+     * <ol>
+     *     <li><b>define_permission</b></li>
+     *     <li>service ID</li>
+     *     <li>permission id</li>
+     *     <li>permission name</li>
+     *     <li>service description</li>
+     * </ol>
+     *
+     * @param tokenID                   access token for carrying out restricted interface actions such as this
+     * @param authenticationData     string array of lines (each line is part of a CSV file) to be parsed and loaded as a new Authentication Permission
+     * @throws cscie97.asn4.ecommerce.exception.ParseException    if an error occurred parsing the authenticationData
+     */
+    private static void definePermission(String tokenID, String[] authenticationData) throws ParseException {
+        // ensure that we have at least 5 elements passed and that the first element is "define_permission"
+        if (authenticationData == null ||
+                authenticationData.length != 5 ||
+                !authenticationData[0].trim().equalsIgnoreCase(PermissionType.DEFINE_PERMISSION.getPermissionName())
+        ) {
+            throw new ParseException("Import Authentication line contains invalid data when calling definePermission(): "+ StringUtils.join(authenticationData, ","),
+                    null,
+                    0,
+                    null,
+                    null);
+        }
+
+        Permission permission = new Permission();
+        permission.setID(authenticationData[2].trim());
+        permission.setName(authenticationData[3].trim());
+        permission.setDescription(authenticationData[4].trim());
+
+        String serviceID = authenticationData[1].trim();
+
+        IAuthenticationServiceAPI authenticationAPI = AuthenticationServiceAPI.getInstance();
+        authenticationAPI.addPermissionToService(tokenID, serviceID, permission);
+
+        System.out.println(String.format("Adding Permission on ServiceID [%s] to AuthenticationService catalog: [%s]\n", serviceID, permission));
+    }
+
+    /**
+     * Creates roles and adds them to the {@link cscie97.asn4.ecommerce.authentication.AuthenticationServiceAPI}.
+     * The format of each element in authenticationData should be:
+     * <ol>
+     *     <li><b>define_role</b></li>
+     *     <li>role id</li>
+     *     <li>role name</li>
+     *     <li>role description</li>
+     * </ol>
+     *
+     * @param tokenID                   access token for carrying out restricted interface actions such as this
+     * @param authenticationData     string array of lines (each line is part of a CSV file) to be parsed and loaded as a new Authentication Permission
+     * @throws cscie97.asn4.ecommerce.exception.ParseException    if an error occurred parsing the authenticationData
+     */
+    private static void defineRole(String tokenID, String[] authenticationData) throws ParseException {
+        // ensure that we have exactly 4 elements passed and that the first element is "define_role"
+        if (authenticationData == null ||
+                authenticationData.length != 4 ||
+                !authenticationData[0].trim().equalsIgnoreCase(PermissionType.DEFINE_ROLE.getPermissionName())
+        ) {
+            throw new ParseException("Import Authentication line contains invalid data when calling defineRole(): "+ StringUtils.join(authenticationData, ","),
+                    null,
+                    0,
+                    null,
+                    null);
+        }
+
+        Role role = new Role();
+        role.setID(authenticationData[1].trim());
+        role.setName(authenticationData[2].trim());
+        role.setDescription(authenticationData[3].trim());
+
+        IAuthenticationServiceAPI authenticationAPI = AuthenticationServiceAPI.getInstance();
+        authenticationAPI.addRole(tokenID, role);
+
+        System.out.println(String.format("Adding Role to AuthenticationService catalog: [%s]\n", role));
+    }
+
+    /**
+     * Creates registered users and adds them to the {@link cscie97.asn4.ecommerce.authentication.AuthenticationServiceAPI}.
+     * The format of each element in authenticationData should be:
+     * <ol>
+     *     <li><b>create_user</b></li>
+     *     <li>user id</li>
+     *     <li>user name</li>
+     * </ol>
+     *
+     * @param tokenID                   access token for carrying out restricted interface actions such as this
+     * @param authenticationData     string array of lines (each line is part of a CSV file) to be parsed and loaded as a new Authentication Service registered User
+     * @throws cscie97.asn4.ecommerce.exception.ParseException    if an error occurred parsing the authenticationData
+     */
+    private static void createUser(String tokenID, String[] authenticationData) throws ParseException {
+        // ensure that we have exactly 3 elements passed and that the first element is "create_user"
+        if (authenticationData == null ||
+                authenticationData.length != 3 ||
+                !authenticationData[0].trim().equalsIgnoreCase(PermissionType.CREATE_USER.getPermissionName())
+        ) {
+            throw new ParseException("Import Authentication line contains invalid data when calling createUser(): "+ StringUtils.join(authenticationData, ","),
+                    null,
+                    0,
+                    null,
+                    null);
+        }
+
+        User user = new User(authenticationData[1].trim(),authenticationData[2].trim());
+
+        IAuthenticationServiceAPI authenticationAPI = AuthenticationServiceAPI.getInstance();
+        authenticationAPI.addUser(tokenID, user);
+
+        System.out.println(String.format("Adding User to AuthenticationService catalog: [%s]\n", user));
+    }
+
+    /**
+     * Adds Entitlements (which may be actually either Roles or Permissions) to Roles.  The format of each element
+     * in authenticationData should be:
+     * <ol>
+     *     <li><b>add_entitlement_to_role</b></li>
+     *     <li>role id</li>
+     *     <li>entitlement id</li>
+     * </ol>
+     *
+     * @param tokenID                   access token for carrying out restricted interface actions such as this
+     * @param authenticationData     string array of lines (each line is part of a CSV file) to be parsed and loaded as a new Authentication Service registered User
+     * @throws cscie97.asn4.ecommerce.exception.ParseException    if an error occurred parsing the authenticationData
+     */
+    private static void addEntitlementToRole(String tokenID, String[] authenticationData) throws ParseException {
+        // ensure that we have exactly 3 elements passed and that the first element is "add_entitlement_to_role"
+        if (authenticationData == null ||
+                authenticationData.length != 3 ||
+                !authenticationData[0].trim().equalsIgnoreCase(PermissionType.ADD_ENTITLEMENT_TO_ROLE.getPermissionName())
+        ) {
+            throw new ParseException("Import Authentication line contains invalid data when calling addEntitlementToRole(): "+ StringUtils.join(authenticationData, ","),
+                    null,
+                    0,
+                    null,
+                    null);
+        }
+
+        String roleID = authenticationData[1].trim();
+        String entitlementID = authenticationData[2].trim();
+
+        IAuthenticationServiceAPI authenticationAPI = AuthenticationServiceAPI.getInstance();
+        authenticationAPI.addPermissionToRole(tokenID, roleID, entitlementID);
+
+        System.out.println(String.format("Adding Entitlement ID [%s] to Role ID [%s]\n", roleID, entitlementID));
+    }
+
+    /**
+     * Adds Credentials to users, which are comprised of a username and password (hashed).  Users can have multiple
+     * sets of Credentials, which will allow them to login to the AuthenticationServiceAPI with different usernames
+     * and password.
+     *
+     * The format of each element in authenticationData should be:
+     * <ol>
+     *     <li><b>add_credential</b></li>
+     *     <li>user id</li>
+     *     <li>username</li>
+     *     <li>password</li>
+     * </ol>
+     *
+     * @param tokenID                   access token for carrying out restricted interface actions such as this
+     * @param authenticationData     string array of lines (each line is part of a CSV file) to be parsed and loaded as a new Authentication Service registered User
+     * @throws cscie97.asn4.ecommerce.exception.ParseException    if an error occurred parsing the authenticationData
+     */
+    private static void addCredentialToUser(String tokenID, String[] authenticationData) throws ParseException {
+        // ensure that we have exactly 4 elements passed and that the first element is "add_credential"
+        if (authenticationData == null ||
+            authenticationData.length != 4 ||
+            !authenticationData[0].trim().equalsIgnoreCase(PermissionType.ADD_CREDENTIAL_TO_USER.getPermissionName())
+        ) {
+            throw new ParseException("Import Authentication line contains invalid data when calling addCredential(): "+ StringUtils.join(authenticationData, ","),
+                    null,
+                    0,
+                    null,
+                    null);
+        }
+
+        String userID = authenticationData[1].trim();
+        String username = authenticationData[2].trim();
+        String password = authenticationData[3].trim();
+
+        IAuthenticationServiceAPI authenticationAPI = AuthenticationServiceAPI.getInstance();
+        authenticationAPI.addCredentialToUser(tokenID, userID, username, password);
+
+        System.out.println(String.format("Adding Credentials username [%s] password [%s] to User ID [%s]\n", username, password, userID));
+    }
+
+    /**
+     * Adds Entitlements to users, which can be either a Permission or Role.
+     *
+     * The format of each element in authenticationData should be:
+     * <ol>
+     *     <li><b>add_entitlement_to_user</b></li>
+     *     <li>user id</li>
+     *     <li>entitlement id</li>
+     * </ol>
+     *
+     * @param tokenID                   access token for carrying out restricted interface actions such as this
+     * @param authenticationData     string array of lines (each line is part of a CSV file) to be parsed and loaded as a new Authentication Service registered User
+     * @throws cscie97.asn4.ecommerce.exception.ParseException    if an error occurred parsing the authenticationData
+     */
+    private static void addEntitlementToUser(String tokenID, String[] authenticationData) throws ParseException {
+        // ensure that we have exactly 4 elements passed and that the first element is "add_credential"
+        if (authenticationData == null ||
+            authenticationData.length != 3 ||
+            !authenticationData[0].trim().equalsIgnoreCase(PermissionType.ADD_ENTITLEMENT_TO_USER.getPermissionName())
+        ) {
+            throw new ParseException("Import Authentication line contains invalid data when calling addEntitlementToUser(): "+ StringUtils.join(authenticationData, ","),
+                    null,
+                    0,
+                    null,
+                    null);
+        }
+
+        String userID = authenticationData[1].trim();
+        String entitlementID  = authenticationData[2].trim();
+
+        IAuthenticationServiceAPI authenticationAPI = AuthenticationServiceAPI.getInstance();
+        authenticationAPI.addEntitlementToUser(tokenID, userID, entitlementID);
+
+        System.out.println(String.format("Adding Entitlement ID [%s] to User ID [%s]\n", entitlementID, userID));
     }
 
 }

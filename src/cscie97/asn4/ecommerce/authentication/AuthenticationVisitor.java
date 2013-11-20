@@ -42,6 +42,7 @@ public class AuthenticationVisitor implements IAuthenticationVisitor {
      * @param entitlement  either a Role or Permission to get the properties for
      * @return  a string containing the salient properties of the Entitlement
      */
+    @Override
     public String visitEntitlement(Entitlement entitlement) {
         String type = null;
         StringBuilder extra = new StringBuilder();
@@ -74,6 +75,7 @@ public class AuthenticationVisitor implements IAuthenticationVisitor {
      * @param permission  a Permission to get the properties for
      * @return  a string containing the salient properties of the Permission
      */
+    @Override
     public String visitPermission(Permission permission) {
         String type = "Permission";
         StringBuilder extra = new StringBuilder();
@@ -89,6 +91,7 @@ public class AuthenticationVisitor implements IAuthenticationVisitor {
      * @param role  a Role to get the properties for
      * @return  a string containing the salient properties of the Role
      */
+    @Override
     public String visitRole(Role role) {
         String type = "Role";
         StringBuilder extra = new StringBuilder();
@@ -116,6 +119,7 @@ public class AuthenticationVisitor implements IAuthenticationVisitor {
      * @param service  the Service to get the properties for
      * @return  a string containing the salient properties of the Service
      */
+    @Override
     public String visitService(Service service) {
         return String.format("\t[Service]: %s\n", getItemProperties(service));
     }
@@ -127,6 +131,7 @@ public class AuthenticationVisitor implements IAuthenticationVisitor {
      * @param user  the User to get the properties for
      * @return  a string containing the salient properties of the User
      */
+    @Override
     public String visitUser(User user) {
         return String.format("\t[User]: %s\n", getItemProperties(user));
     }
@@ -137,6 +142,7 @@ public class AuthenticationVisitor implements IAuthenticationVisitor {
      * @param item  an item that is visitable from the Authentication Service, such as User, Service, Role, or Permission
      * @return  a string representing the salient properties of the object
      */
+    @Override
     public String visit(Object item) {
         if (item instanceof Service) {
             return visitService((Service)item);

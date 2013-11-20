@@ -1,7 +1,7 @@
 package cscie97.asn4.ecommerce.authentication;
 
 /**
- * Interface for defining the visit methods that the implementing class must overwrite; follows the Visitor patttern.
+ * Interface for defining the visit methods that the implementing class must overwrite; follows the Visitor pattern.
  *
  * @author David Killeffer &lt;rayden7@gmail.com&gt;
  * @version 1.0
@@ -44,6 +44,7 @@ public interface IAuthenticationVisitor {
      * @return  a string containing the salient properties of the Role
      */
     public String visitRole(Role role);
+
     /**
      * Visits a {@link cscie97.asn4.ecommerce.authentication.Service} and prints out the salient properties of
      * the object.

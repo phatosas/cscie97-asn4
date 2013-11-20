@@ -30,7 +30,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public abstract class Item implements IAuthenticationVisitable {
 
     /**
-     * A unique string identifier for each authentication item; should be a GUID
+     * A unique string identifier for each authentication item; should be a GUID if implementing object is a User
      */
     private String id;
 
@@ -110,7 +110,7 @@ public abstract class Item implements IAuthenticationVisitable {
 
     /**
      * Public static method that checks that all required fields are set, and that all authentication item values are
-     * valid (e.g., ratings are 0 to 5, where 5 is best, item price should only allow positive numbers, etc.).
+     * valid.
      *
      * @param content  the item to be validated for correct properties
      * @return  true if all properties are valid, false otherwise

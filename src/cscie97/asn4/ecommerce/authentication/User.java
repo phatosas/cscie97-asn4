@@ -36,7 +36,7 @@ public class User extends Item implements IAuthenticationVisitable {
     private Set<Entitlement> entitlements = new HashSet<Entitlement>();
 
     /**
-     * the AccessToken is what is checked for validity when the user calls restricted interface methods on any
+     * The AccessToken is what is checked for validity when the user calls restricted interface methods on any
      * of the published APIs
      */
     private AccessToken token;

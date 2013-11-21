@@ -49,7 +49,11 @@ public class User extends Item implements IAuthenticationVisitable {
      * @param description  authentication item description
      */
     public User(String id, String name, String description) {
-        this.setID(id);
+        if (id == null || id.length() == 0) {
+            this.setID(UUID.randomUUID().toString());
+        } else {
+            this.setID(id);
+        }
         this.setName(name);
         this.setDescription(description);
     }

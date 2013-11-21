@@ -48,15 +48,14 @@ public class AuthenticationImporter extends Importer {
 
         // in order to run the import of the authentication.csv file, the User who owns the passed GUID AccessToken
         // must have ALL of the permissions on the Authentication Service API, which include:
-        if (
-                authenticationAPI.mayAccess(tokenID, PermissionType.DEFINE_SERVICE) &&
-                        authenticationAPI.mayAccess(tokenID, PermissionType.DEFINE_PERMISSION) &&
-                        authenticationAPI.mayAccess(tokenID, PermissionType.DEFINE_ROLE) &&
-                        authenticationAPI.mayAccess(tokenID, PermissionType.CREATE_USER) &&
-                        authenticationAPI.mayAccess(tokenID, PermissionType.ADD_ENTITLEMENT_TO_ROLE) &&
-                        authenticationAPI.mayAccess(tokenID, PermissionType.ADD_CREDENTIAL_TO_USER) &&
-                        authenticationAPI.mayAccess(tokenID, PermissionType.ADD_ENTITLEMENT_TO_USER)
-                ) {
+        if (authenticationAPI.mayAccess(tokenID, PermissionType.DEFINE_SERVICE) &&
+                authenticationAPI.mayAccess(tokenID, PermissionType.DEFINE_PERMISSION) &&
+                authenticationAPI.mayAccess(tokenID, PermissionType.DEFINE_ROLE) &&
+                authenticationAPI.mayAccess(tokenID, PermissionType.CREATE_USER) &&
+                authenticationAPI.mayAccess(tokenID, PermissionType.ADD_ENTITLEMENT_TO_ROLE) &&
+                authenticationAPI.mayAccess(tokenID, PermissionType.ADD_CREDENTIAL_TO_USER) &&
+                authenticationAPI.mayAccess(tokenID, PermissionType.ADD_ENTITLEMENT_TO_USER)
+        ) {
             int lineNumber = 0;  // keep track of what lineNumber we're reading in from the input file for exception handling
             String line;  // store the text on each line as it's processed
 
